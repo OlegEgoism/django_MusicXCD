@@ -4,9 +4,11 @@ from .models import Samples, Style, Format
 
 def home(request):
     samples = Samples.objects.filter(published=True)
+    style = Style.objects.all()
     context = {
         'samples': samples,
-        'title': 'Семплы'
+        'title': 'Семплы',
+        'style': style,
     }
     return render(request, template_name='home.html', context=context)
 
