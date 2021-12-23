@@ -25,28 +25,37 @@
 
 <div class="container mt-3">
     <h1>{{ title }}</h1>
-
     {% for item in samples %}
-    <div class="card mb-3">
+    <div class="card mb-2">
+
         <div class="card-body">
-            <div class="card-title">
-                <h5><u>{{ item.title }}</u>: {% for i in item.format.all %} <a href="/">{{ i }}</a> {% endfor %} </h5>
+            <div class="card-footer">
+                <h5>{{ item.title | title }} {% for i in item.style.all %} <a href="/">{{ i }}</a> {% endfor %} ( {% for i in item.format.all %} <a href="/">{{ i }}</a> {% endfor %} )</h5>
+                <!--                 <h5>{% for i in item.format.all %} <a href="/">{{ i }}</a> {% endfor %}</h5>-->
             </div>
 
-            <div class="card-title">
-                <h5>{% for i in item.style.all %} <a href="/">{{ i }}</a> {% endfor %}</h5>
+            <div class="card-footer">
+                <h6>Автор: {{ item.authors | upper }}</h6>
             </div>
 
-            <div class="card-body">
-                <h6 class="card-text">{{ item.descriptions }}</h6>
-                <a href="{{ item.link }}" class="btn btn-primary">Скачать</a>
-
-                <p>{{ item.photo }}</p>
+            <div class="card-body" align="justify">
+                <div>
+                    {% if item.photo %}
+                    <img src="{{ item.photo.url }}"
+                         alt="" width="280" height="200" align="left" vspace="2" hspace="2">
+                    <!--                    Елси нет изображения-->
+                    {% else %}
+                    <img src="https://upload.wikimedia.org/wikipedia/ru/thumb/a/ac/No_image_available.svg/1200px-No_image_available.svg.png"
+                         alt="" width="280" height="200" align="left" vspace="2" hspace="2">
+                    {% endif %}
+                </div>
+                <h6 class="card-text" >{{ item.descriptions | safe| linebreaks | truncatechars:500 }}</h6>
+                <a href="#" class='btn btn-primary'>Read more...</a>
             </div>
+        </div>
 
-            <div class="card-footer text-muted">
-                <h5>Автор: {{ item.authors }}</h5>
-            </div>
+        <div class="card-footer">
+            <a href="{{ item.link }}" class="btn btn-primary">Скачать</a>
         </div>
     </div>
     {% endfor %}
@@ -55,3 +64,12 @@
 
 </body>
 </html>
+
+
+
+
+
+
+
+<!--                {% autoescape on %}-->
+<!--                {% endautoescape %}-->
