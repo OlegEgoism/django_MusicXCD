@@ -18,8 +18,8 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item"><a class="nav-link" href="/">Главная</a></li>
-            <li class="nav-item"><a class="nav-link" href="/">Добавить семплы</a></li>
+            <li class="nav-item"> <a class="nav-link" href="{% url 'home' %}"><font color="#0d6efd">Главная</font></a></li>
+            <li class="nav-item"> <a class="nav-link" href="/"><font color="#0d6efd">Добавить семплы</font></a></li>
         </ul>
         <form class="d-flex">
             <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Search">
@@ -34,17 +34,26 @@
 
         <div class="col-md-3">
             <div class="list-group">
+                <h5><font color="red">Стили</font></h5>
                 {% for item in style %}
-                <a href="{% url 'style' item.id %}"> {{ item.name }}</a>
+                <h5><a href="{% url 'style' item.id %}"> {{ item.name }}</a></h5>
                 {% endfor %}
             </div>
+
+            <div class="list-group">
+                <h5><font color="red">Авторы</font></h5>
+                {% for item in samples %}
+                <h5><a href="{% url 'style' item.id %}"> {{ item.authors | upper }}</a></h5>
+                {% endfor %}
+            </div>
+
         </div>
 
         <div class="col-md-9">
             {% for item in samples %}
             <div class="card mb-3">
                 <div class="card-header">
-                    <h5>{{ item.title | title }} {% for i in item.style.all %} <a href="/">{{ i }}</a> {% endfor %} ( {% for i in item.format.all %} <a href="/">{{ i }}</a> {% endfor %} )</h5>
+                    <h5>Стиль {% for i in item.style.all %} <a href="{% url 'style' item.id %}">{{ i }}</a> {% endfor %} ( {% for i in item.format.all %} <u><a><font color="">{{ i }}</font></a></u> {% endfor %} )</h5>
                     <h5>Автор <a href="/">{{ item.authors | upper }}</a></h5>
                 </div>
                 <div class="card-body" align="justify">
@@ -58,9 +67,11 @@
                         {% endif %}
                     </div>
                     <div class="media-body">
+                        <h5> Название библиотеки: {{ item.title | title }}</h5>
                         <h6 class="card-text">{{ item.descriptions | safe| linebreaks | truncatechars:500 }}</h6>
-                        <a href="#" class='btn btn-dark'>Полная информация</a>
+                        <a href="#" class='btn btn-dark'>Описание</a>
                         <a href="{{ item.link }}" class="btn btn-primary">Скачать</a>
+                        <a class="btn"> Размер: {{ item.size }}  Mb</a>
                     </div>
                 </div>
                 </div>
