@@ -6,11 +6,34 @@ def home(request):
     samples = Samples.objects.filter(published=True)
     style = Style.objects.all()
     context = {
-        'samples': samples,
         'title': 'Семплы',
+        'samples': samples,
         'style': style,
     }
     return render(request, template_name='home.html', context=context)
+
+
+def get_style(request, id):
+
+    # style = Style.objects.get(id=id)
+    # # print(styles)
+    # samples = Samples.objects.filter(style=style)
+    samples = Samples.objects.filter(style__id=id)
+
+    styles = Style.objects.all()
+    # styless = Style.objects.get(name=id)
+    context = {
+        'samples': samples,
+        'styles': styles,
+        # 'styless': styless,
+    }
+    return render(request, 'style.html', context=context)
+
+
+
+
+
+
 
 
 
