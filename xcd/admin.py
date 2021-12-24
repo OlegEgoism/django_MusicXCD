@@ -1,25 +1,30 @@
 from django.contrib import admin
-from .models import Format, Samples, Style
+from .models import Format, Samples, Style, Author
 
 
-class FormatAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name')
-    list_display_links = ('id', 'name')
+class AuthorAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
 
 
 class StyleAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name')
-    list_display_links = ('id', 'name')
+    list_display = ('name',)
+    search_fields = ('name',)
+
+
+class FormatAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
 
 
 class SamplesAdmin(admin.ModelAdmin):
-    list_display = ('id', 'authors', 'title', 'size', 'published')
-    list_display_links = ('id', 'authors')
-    search_fields = ('title', 'authors')
+    list_display = ('title', 'size', 'published')
+    search_fields = ('title', 'size',)
     list_editable = ('published',)
-    list_filter = ('published', 'authors')
+    list_filter = ('published', 'authors',)
 
 
-admin.site.register(Format, FormatAdmin)
+admin.site.register(Author, AuthorAdmin)
 admin.site.register(Style, StyleAdmin)
+admin.site.register(Format, FormatAdmin)
 admin.site.register(Samples, SamplesAdmin)

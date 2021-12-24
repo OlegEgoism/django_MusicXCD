@@ -1,12 +1,11 @@
 from django.shortcuts import render
-from .models import Samples, Style, Format
+from .models import Samples, Style, Format, Author
 
 
 def home(request):
     samples = Samples.objects.filter(published=True)
     style = Style.objects.all()
-
-    authors = Samples.objects.filter(authors='authors')
+    authors = Author.objects.all()
     context = {
         'title': 'Семплы',
         'samples': samples,
@@ -28,7 +27,10 @@ def get_style(request, name):
 
 
 
-
+    # authors = Samples.objects.values_list('authors').order_by('authors').distinct()
+    # for authors in Samples.objects.values_list('authors', flat=True).distinct():
+    #     Samples.objects.filter(pk__in=Samples.objects.filter(authors=authors).values_list('id', flat=True)[1:])
+    #     print(authors)
 
 
 
