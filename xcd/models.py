@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 
 class Samples(models.Model):
@@ -23,6 +24,9 @@ class Samples(models.Model):
 class Author(models.Model):
     name = models.CharField(max_length=100)
 
+    def get_absolute_url(self):
+        return reverse('author', kwargs={'name': self.pk})
+
     def __str__(self):
         return self.name
 
@@ -44,6 +48,9 @@ class Format(models.Model):
 
 class Style(models.Model):
     name = models.CharField(max_length=50, verbose_name='Название стиля')
+
+    def get_absolute_url(self):
+        return reverse('style', kwargs={'name': self.pk})
 
     def __str__(self):
         return self.name

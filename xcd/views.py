@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import Samples, Style, Author
-
+from django.http import HttpResponse
 
 def home(request):
     samples = Samples.objects.filter(published=True)
@@ -40,13 +40,37 @@ def get_author(request, name):
     }
     return render(request, template_name='home.html', context=context)
 
-def get_info(request, name):
-    info = Samples.objects.get(pk=name)
-    context ={
-        'title': 'Информация о семплах',
-        'descriptions': descriptions,
+def get_info(request):
+    samples = Samples.objects.filter(published=True)
+    style = Style.objects.all()
+    author = Author.objects.all()
+    context = {
+        'title': 'Информация',
+        'samples': samples,
+        'style': style,
+        'author': author,
     }
-    return render(request, 'info.html', context=context)
+    return render(request, template_name='info.html', context=context)
+
+
+
+
+
+#
+# def get_info(request):
+#     return HttpResponse("hi Oleg")
+
+
+    # samples = Samples.objects.filter(author__id=name, published=True)
+    # style = Style.objects.all()
+    # author = Author.objects.all()
+    # context = {
+    #     'title': 'Информация',
+    #     'samples': samples,
+    #     'style': style,
+    #     'author': author,
+    # }
+    # return render(request, template_name='info.html', context=context)
 
 
 
