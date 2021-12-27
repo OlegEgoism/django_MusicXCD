@@ -21,7 +21,7 @@ class SamplesAdmin(admin.ModelAdmin):
     list_display = ('title', 'size', 'published')
     search_fields = ('title', 'size',)
     list_editable = ('published',)
-    list_filter = ('published', 'authors',)
+    list_filter = ('published', 'author',)
 
 
 admin.site.register(Author, AuthorAdmin)

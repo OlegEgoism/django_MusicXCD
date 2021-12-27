@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 
 {% block title %}
-{{ block.super }}/{{ title }}
+{{ block.super }}/{{ info.title }}
 {% endblock %}
 
 
 {% block sidebar %}
+
     <div class="list-group">
         <h5><font color="red">Стили</font></h5>
         {% for item in style %}
@@ -23,6 +24,7 @@
 
 
 {% block content %}
+
 {% for item in samples %}
     <div class="card mb-3">
         <div class="card-header">
@@ -42,7 +44,7 @@
             <div class="media-body">
                 <h5> Название библиотеки: {{ item.title | title }}</h5>
                 <h6 class="card-text">{{ item.descriptions | safe| linebreaks | truncatechars:400 }}</h6>
-                <a href="" class='btn btn-dark'>Описание</a>
+                <a href="#" class='btn btn-dark'>Описание</a>
                 <a href="{{ item.link }}" class="btn btn-primary">Скачать</a>
                 <a class="btn"> Размер: {{ item.size }} Mb</a>
                 <a> ({% for i in item.format.all %} <u><a><font color="">{{ i }}</font></a></u> {% endfor %}) </a>

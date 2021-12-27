@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Samples(models.Model):
-    authors = models.ManyToManyField('Author', verbose_name='Автор')
+    author = models.ManyToManyField('Author', verbose_name='Автор')
     style = models.ManyToManyField('Style', verbose_name='Стиль')
     format = models.ManyToManyField('Format', verbose_name='Формат')
     title = models.CharField(max_length=50, verbose_name='Название')
