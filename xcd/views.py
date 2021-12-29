@@ -40,8 +40,9 @@ def get_author(request, name):
     }
     return render(request, template_name='home.html', context=context)
 
-def get_info(request):
-    samples = Samples.objects.filter(published=True)
+
+def get_info(request, pk):
+    samples = Samples.objects.filter(id=pk, published=True)
     style = Style.objects.all()
     author = Author.objects.all()
     context = {

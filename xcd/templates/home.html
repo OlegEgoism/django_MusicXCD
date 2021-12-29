@@ -6,19 +6,7 @@
 
 
 {% block sidebar %}
-    <div class="list-group">
-        <h5><font color="red">Стили</font></h5>
-        {% for item in style %}
-        <h5><a href="{% url 'style' item.pk %}"> {{ item.name }}</a></h5>
-        {% endfor %}
-    </div>
-
-    <div class="list-group">
-        <h5><font color="red">Авторы</font></h5>
-        {% for item in author %}
-        <h5><a href="{% url 'author' item.pk %}"> {{ item.name | upper }}</a></h5>
-        {% endfor %}
-    </div>
+{% include 'inc/_sidebar.html' %}
 {% endblock %}
 
 
@@ -40,15 +28,15 @@
                 {% endif %}
             </div>
             <div class="media-body">
-                <h5><font color="red"> Название: </font> <a href="/info"> {{ item.title | title }} </a></h5>
-                <h6 class="card-text">{{ item.descriptions | safe| linebreaks | truncatechars:400 }}</h6>
-<!--                <a href="" class='btn btn-dark'>Описание</a>-->
-                <a href="{{ item.link }}" class="btn btn-primary">Скачать</a>
-                <a class="btn"> Размер: {{ item.size }} Mb</a>
-                <a> ({% for i in item.format.all %} <u><a><font color="">{{ i }}</font></a></u> {% endfor %}) </a>
+                <h5><font color="red"> Название: </font> <a> {{ item.title | title }} </a></h5>
+                <h6 class="card-text" >{{ item.descriptions | safe| linebreaks | truncatechars:550 }} <a href="{% url 'descriptions' item.pk %}">Еще</a></h6>
             </div>
+        </div>
+        <div class="card-header">
+            <a href="{{ item.link }}" class="btn btn-primary">Скачать</a>
+            <a class="btn"> Размер: {{ item.size }} Mb</a>
+            <a> Формат: {% for i in item.format.all %} <a><font color="blue">{{ i }}</font></a>{% endfor %} </a>
         </div>
     </div>
 {% endfor %}
-
 {% endblock %}
