@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Samples, Style, Author
 from django.http import HttpResponse
 
@@ -15,8 +15,9 @@ def home(request):
     return render(request, template_name='home.html', context=context)
 
 
-def get_style(request, name):
-    samples = Samples.objects.filter(style__id=name, published=True)
+def get_style(request, pk):
+    samples = Samples.objects.filter(style__id=pk, published=True)
+    Page = get_object_or_404(Style, pk=pk)
     style = Style.objects.all()
     author = Author.objects.all()
     context = {
@@ -28,8 +29,9 @@ def get_style(request, name):
     return render(request, template_name='home.html', context=context)
 
 
-def get_author(request, name):
-    samples = Samples.objects.filter(author__id=name, published=True)
+def get_author(request, pk):
+    samples = Samples.objects.filter(author__id=pk, published=True)
+    Page = get_object_or_404(Author, pk=pk)
     style = Style.objects.all()
     author = Author.objects.all()
     context = {
@@ -52,6 +54,8 @@ def get_info(request, pk):
         'author': author,
     }
     return render(request, template_name='info.html', context=context)
+
+
 
 
 
