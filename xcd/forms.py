@@ -3,11 +3,10 @@ from django import forms
 from .models import *
 
 class AddAuthorForm(forms.ModelForm):
+    name = forms.CharField(max_length=150, label='Новый автор (добавьте автора если такого нет в списке)', widget=forms.TextInput(attrs={'class': 'form-control'}))
     class Meta:
         model = Author
-        fields = '__all__'
-    # author = forms.CharField(label='Авторы')
-
+        fields = ['name']
 
 class SamplesForm(forms.ModelForm):
     author = forms.ModelMultipleChoiceField(queryset=Author.objects.all(), label='Автор', widget=forms.CheckboxSelectMultiple)
@@ -18,32 +17,18 @@ class SamplesForm(forms.ModelForm):
     photo = forms.ImageField(label='Обложка', required=False)
     size = forms.CharField(label='Размер в МБ', widget=forms.TextInput(attrs={'class': 'form-control'}))
     link = forms.CharField(label='Ссылка для скачивания', widget=forms.TextInput(attrs={'class': 'form-control'}))
-    published = forms.BooleanField(label='Опубликовать?', initial=True)
+    # published = forms.BooleanField(label='Опубликовать?', initial=True)
     class Meta:
         model = Samples
         fields = '__all__'
+        # fields = ['author', 'style', 'format', 'title', 'descriptions', 'photo', 'size', 'link']
 
 
 
-# class SamplesForm(forms.Form):
-#     author = forms.ModelMultipleChoiceField(queryset=Author.objects.all(), label='Автор')
-#     style = forms.ModelMultipleChoiceField(queryset=Style.objects.all(), label='Стиль', widget=forms.CheckboxSelectMultiple)
-#     format = forms.ModelMultipleChoiceField(queryset=Format.objects.all(), label='Формат', widget=forms.CheckboxSelectMultiple)
-#     title = forms.CharField(max_length=150, label='Название', widget=forms.TextInput(attrs={'class': 'form-control'}))
-#     descriptions = forms.CharField(label='Описание', required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5}))
-#     photo = forms.ImageField(label='Обложка', required=False)
-#     size = forms.CharField(label='Размер в МБ', widget=forms.TextInput(attrs={'class': 'form-control'}))
-#     link = forms.CharField(label='Ссылка для скачивания', widget=forms.TextInput(attrs={'class': 'form-control'}))
-#     published = forms.BooleanField(label='Опубликовать?', initial=True)
 
-
-
-#
 # def user_cap(name):
 #     if name.isupper():
 #         raise ValidationError('Имя с большой буквы')
-#     elif len(name) < 5:
-#         raise ValidationError('Имя не менее 5 букв')
 #     else:
 #         return
 #

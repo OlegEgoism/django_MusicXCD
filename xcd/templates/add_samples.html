@@ -12,16 +12,15 @@
 
 {% block content %}
 <h1>Добавить семплы</h1>
-<h3>добавить автора если такого нет</h3>
-<form action="{% url 'add_author' %}" method="post">
+<form action="{% url 'add_author' %}" method="POST">
     {% csrf_token %}
     {{form_a.as_p}}
-    <button>ok</button>
+    <button type="submit" class="btn btn-primary btn-block">Добавить автора</button>
 </form>
 
-<form action="" method="POST" enctype="multipart/form-data" >
-    {% csrf_token %}
 
+<form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
 
     {% for field in form %}
     <div class="form-group">
@@ -31,10 +30,9 @@
             {{ field.error }}
         </div>
     </div>
-    {% endfor %}
 
-    <button type="submit" class="btn btn-primary btn-block">Добавить</button>
-    <h5><u>После заполнения всех полей ваши семплы будут в очереди на модерации</h5>
+    {% endfor %}
+    <h5><button type="submit" class="btn btn-primary btn-block">Добавить</button> <u><font color="red">После добавления ваши семплы будут в очереди на модерации</font></h5>
+    {% endblock %}
 </form>
 
-{% endblock %}

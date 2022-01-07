@@ -60,14 +60,22 @@ def get_info(request, pk):
     }
     return render(request, template_name='info.html', context=context)
 
+
+
 def add_author(request):
-    form_a=AddAuthorForm()
+    style = Style.objects.all()
+    author = Author.objects.all()
     if request.method == 'POST':
         form_a = AddAuthorForm(request.POST)
         if form_a.is_valid():
             form_a.save()
-            return render(request, template_name='add_samples.html')
-    return render(request, template_name='add_samples.html')
+    context = {
+        'title': 'Добавить автора',
+        'style': style,
+        'author': author,
+    }
+    return render(request, template_name='published_author.html', context=context)
+
 
 def add_samples(request):
     style = Style.objects.all()
@@ -77,16 +85,6 @@ def add_samples(request):
         form = SamplesForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-
-            # form.save(commit=False)
-            # a = form.cleaned_data["author"]
-            # print(a)
-            # print(form.cleaned_data)
-            # if Author.objects.filter(name=a).exists():
-            #     new = Author.objects.get(name=a)
-            #     print(type(new.id))
-            #     form.cleaned_data["author"] = new.id
-                # form.save()
             return redirect('published')  # куда перейдем после добавления
     else:
         form = SamplesForm()
@@ -109,7 +107,7 @@ def add_ok(request):
         'style': style,
         'author': author,
     }
-    return render(request, template_name='published.html', context=context)
+    return render(request, template_name='published_samples.html', context=context)
 
 # def add_ok(request):
 #     style = Style.objects.all()
