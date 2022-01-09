@@ -21,18 +21,10 @@
 
 <form action="" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
+    {{ form.as_p }}
+<!--    {{ form.errors }}-->
+    <button type="submit" class="btn btn-primary btn-block">Добавить семплы</button>
 
-    {% for field in form %}
-    <div class="form-group">
-        {{ field.label_tag }}
-        {{ field }}
-        <div class="form_error">
-            {{ field.error }}
-        </div>
-    </div>
-
-    {% endfor %}
-    <h5><button type="submit" class="btn btn-primary btn-block">Добавить</button> <u><font color="red">После добавления ваши семплы будут в очереди на модерации</font></h5>
     {% endblock %}
 </form>
 

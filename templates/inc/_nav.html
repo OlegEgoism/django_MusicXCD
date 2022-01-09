@@ -9,8 +9,8 @@
             <li class="nav-item"><a class="nav-link" href="{% url 'home' %}"><font color="#0d6efd">Главная</font></a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'add_samples' %}"><font color="#0d6efd">Добавить семплы</font></a></li>
         </ul>
-        <form class="d-flex">
-            <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Search">
+        <form class="d-flex" action="{% url 'search' %}" method="GET">
+            <input class="form-control me-2" type="text" placeholder="Поиск" aria-label="Search" name="search">
             <button class="btn btn-outline-primary" type="submit">Поиск</button>
         </form>
     </div>

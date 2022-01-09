@@ -1,9 +1,15 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import CreateView
-
 from .models import *
-from .forms import SamplesForm, AddAuthorForm
+from .forms import SamplesForm, AddAuthorForm, LoginUserForm, RegisterUserForm
+from django.views.generic import CreateView, ListView
 from django.http import HttpResponse
+
+#Новые добавления
+from django.contrib.auth import logout, login
+from django.contrib.auth.views import LoginView
+from django.urls import reverse_lazy
+
+
 
 
 def home(request):
@@ -61,7 +67,6 @@ def get_info(request, pk):
     return render(request, template_name='info.html', context=context)
 
 
-
 def add_author(request):
     style = Style.objects.all()
     author = Author.objects.all()
@@ -69,6 +74,7 @@ def add_author(request):
         form_a = AddAuthorForm(request.POST)
         if form_a.is_valid():
             form_a.save()
+            # return redirect('add_samples')
     context = {
         'title': 'Добавить автора',
         'style': style,
@@ -85,21 +91,20 @@ def add_samples(request):
         form = SamplesForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('published')  # куда перейдем после добавления
+            return redirect('published')  #Куда перейдем после добавления
     else:
-        form = SamplesForm()
+        form = SamplesForm() #Если проверка выше не прошла
     context = {
         'title': 'Добавить семплы',
         'style': style,
         'author': author,
         'form': form,
-        'form_a':form_a
-
+        'form_a': form_a,
     }
     return render(request, template_name='add_samples.html', context=context)
 
 
-def add_ok(request):
+def add_published(request):
     style = Style.objects.all()
     author = Author.objects.all()
     context = {
@@ -108,6 +113,120 @@ def add_ok(request):
         'author': author,
     }
     return render(request, template_name='published_samples.html', context=context)
+
+
+# AWe#
+
+class RegisterUser(CreateView):
+    style = Style.objects.all()
+    author = Author.objects.all()
+    form_class = RegisterUserForm
+    template_name = 'register.html'
+    success_url = reverse_lazy('login')
+    context = {
+        'title': 'Опубликовано',
+        'style': style,
+        'author': author,
+    }
+    def get_context_data(self, *, object_list=None, **kwargs):
+
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title="Регистрация")
+        return dict(list(context.items()) + list(c_def.items()))
+    # return render(request, template_name='register.html', context=context)
+
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return redirect('home')
+
+
+class LoginUser(LoginView):
+    form_class = LoginUserForm
+    template_name = 'login.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title="Авторизация")
+        return dict(list(context.items()) + list(c_def.items()))
+
+    def get_success_url(self):
+        return reverse_lazy('home')
+
+
+def logout_user(request):
+    logout(request)
+    return redirect('login')
+
+
+
+
+# from django.contrib.auth import authenticate, login
+#
+# def my_view(request):
+#     username = request.POST['username']
+#     password = request.POST['password']
+#     user = authenticate(request, username=username, password=password)
+#     if user is not None:
+#         login(request, user)
+#         # Redirect to a success page.
+#         ...
+#     else:
+#         # Return an 'invalid login' error message.
+#         ...
+
+
+
+def search(request):
+    style = Style.objects.all()
+    author = Author.objects.all()
+    if request.method =='POST':
+        if 'q' in request.GET:
+            return HttpResponse('Мы нашли' % request.POST['q'])
+        else:
+            return HttpResponse('Вы отправили пустой завпрос')
+    context = {
+        'title': 'Опубликовано',
+        'style': style,
+        'author': author,
+    }
+    return render(request, template_name='home.html', context=context)
+
+# def search(request):
+#     str_search = request.GET.get('search')
+#     if str_search:
+#         list_search = str_search.split()
+#         res = []
+#         for i in list_search:
+#             authors = Author.objects.filter(name__icontains=i).exists()
+#
+#             if authors:
+#                 authors = Author.objects.filter(name__icontains=i)
+#                 res.append(authors)
+#                 print(res)
+#             else:
+#                 print('No')
+#     return redirect('home')
+
+    # if request.GET.get("q") != None:
+    #     query = request.GET.get("q")
+    #     context["array"] = Samples.objects.filter(DB__item__contains=query)
+    # print(request.GET.get('search'))
+
+
+
+# class Search(ListView):
+#     paginate_by = 3
+#
+#     def get_queryset(self):
+#         return Samples.objects.filter(name__icontains=self.request.GET.get("q"))
+#
+#     def get_context_data(self, *args, **kwargs):
+#         context = super().get_context_data(*args, **kwargs)
+#         context["q"] = f'q={self.request.GET.get("q")}&'
+#         return context
+
+
 
 # def add_ok(request):
 #     style = Style.objects.all()

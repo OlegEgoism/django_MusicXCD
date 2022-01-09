@@ -11,7 +11,7 @@ class Samples(models.Model):
     photo = models.ImageField(blank=True, upload_to='photos/%Y/%m/%d/', verbose_name='Изображение')
     size = models.DecimalField(max_digits=6, decimal_places=2, verbose_name='Размер в MB')
     link = models.TextField(verbose_name='Ссылка на сачивание файлов')
-    published = models.BooleanField(default=True, verbose_name='Опубликовано')
+    published = models.BooleanField(default=False, verbose_name='Опубликовано')
 
     def __str__(self):
         return self.title
@@ -31,8 +31,10 @@ class Author(models.Model):
         return self.name
 
     class Meta:
+        unique_together = 'name', #уникальное имя в БД
         verbose_name = 'Автор'
         verbose_name_plural = 'Авторы'
+        ordering = ['name']
 
 
 class Format(models.Model):
@@ -44,6 +46,7 @@ class Format(models.Model):
     class Meta:
         verbose_name = 'Формат'
         verbose_name_plural = 'Форматы'
+        ordering = ['name']
 
 
 class Style(models.Model):
@@ -58,3 +61,4 @@ class Style(models.Model):
     class Meta:
         verbose_name = 'Стиль'
         verbose_name_plural = 'Стили'
+        ordering = ['name']
