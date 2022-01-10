@@ -14,8 +14,8 @@
 {% for item in samples %}
     <div class="card mb-3">
         <div class="card-header">
-            <h5><font color="red"> Стиль: </font> {% for i in item.style.all %} <a href="{% url 'style' i.pk %}">{{ i }}</a>{% endfor %}</h5>
-            <h5><font color="red"> Автор: </font> {% for i in item.author.all %} <a href="{% url 'author' i.pk %}">{{ i | upper }}</a>{% endfor %}</h5>
+            <h5><font color="red"> Стиль: </font> {% for i in item.style.all %} <a href="{% url 'style' i.slug %}">{{ i }}</a>{% endfor %}</h5>
+            <h5><font color="red"> Автор: </font> {% for i in item.author.all %} <a href="{% url 'author' i.slug %}">{{ i | upper }}</a>{% endfor %}</h5>
         </div>
         <div class="card-body" align="justify">
             <div>
@@ -35,7 +35,7 @@
         <div class="card-header">
             <a href="{{ item.link }}" class="btn btn-primary">Скачать</a>
             <a class="btn"> Размер: {{ item.size }} Mb</a>
-            <a> ({% for i in item.format.all %} <u><a><font color="">{{ i }}</font></a></u> {% endfor %}) </a>
+            <a> Формат: {% for i in item.format.all %} <a><font color="blue">{{ i }}</font></a>{% endfor %} </a>
         </div>
     </div>
 {% endfor %}

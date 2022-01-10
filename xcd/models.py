@@ -6,7 +6,7 @@ class Samples(models.Model):
     author = models.ManyToManyField('Author', verbose_name='Автор')
     style = models.ManyToManyField('Style', verbose_name='Стиль')
     format = models.ManyToManyField('Format', verbose_name='Формат')
-    title = models.CharField(max_length=50, verbose_name='Название')
+    title = models.CharField(max_length=50, verbose_name='Название семплов')
     descriptions = models.TextField(blank=True, verbose_name='Описание')
     photo = models.ImageField(blank=True, upload_to='photos/%Y/%m/%d/', verbose_name='Изображение')
     size = models.DecimalField(max_digits=6, decimal_places=2, verbose_name='Размер в MB')
@@ -22,18 +22,35 @@ class Samples(models.Model):
 
 
 class Author(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, verbose_name='Имя автора')
+    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL")
 
     def get_absolute_url(self):
-        return reverse('author', kwargs={'name': self.pk})
+        return reverse('author', kwargs={'slug': self.slug})
 
     def __str__(self):
         return self.name
 
     class Meta:
-        unique_together = 'name', #уникальное имя в БД
+        unique_together = 'name',  # уникальное имя
         verbose_name = 'Автор'
         verbose_name_plural = 'Авторы'
+        ordering = ['name']
+
+
+class Style(models.Model):
+    name = models.CharField(max_length=50, verbose_name='Название стиля')
+    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL")
+
+    def get_absolute_url(self):
+        return reverse('style', kwargs={'slug': self.slug})
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Стиль'
+        verbose_name_plural = 'Стили'
         ordering = ['name']
 
 
@@ -46,19 +63,4 @@ class Format(models.Model):
     class Meta:
         verbose_name = 'Формат'
         verbose_name_plural = 'Форматы'
-        ordering = ['name']
-
-
-class Style(models.Model):
-    name = models.CharField(max_length=50, verbose_name='Название стиля')
-
-    def get_absolute_url(self):
-        return reverse('style', kwargs={'name': self.pk})
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = 'Стиль'
-        verbose_name_plural = 'Стили'
         ordering = ['name']

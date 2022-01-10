@@ -1,13 +1,13 @@
 <div class="list-group">
     <h5><font color="red">Стили</font></h5>
     {% for item in style %}
-    <h5><a href="{% url 'style' item.pk %}"> {{ item.name }}</a></h5>
+    <h5><a href="{% url 'style' item.slug %}"> {{ item.name }}</a></h5>
     {% endfor %}
 </div>
 
 <div class="list-group">
     <h5><font color="red">Авторы</font></h5>
     {% for item in author %}
-    <h5><a href="{% url 'author' item.pk %}"> {{ item.name | upper }}</a></h5>
+    <h5><a href="{% url 'author' item.slug %}"> {{ item.name | upper }}</a></h5>
     {% endfor %}
 </div>

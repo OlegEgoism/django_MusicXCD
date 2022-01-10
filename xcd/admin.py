@@ -5,11 +5,13 @@ from .models import Format, Samples, Style, Author
 class AuthorAdmin(admin.ModelAdmin):
     list_display = ('name',)
     search_fields = ('name',)
+    prepopulated_fields = {"slug": ("name",)}
 
 
 class StyleAdmin(admin.ModelAdmin):
     list_display = ('name',)
     search_fields = ('name',)
+    prepopulated_fields = {"slug": ("name",)}
 
 
 class FormatAdmin(admin.ModelAdmin):

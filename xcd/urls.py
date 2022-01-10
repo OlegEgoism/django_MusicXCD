@@ -7,11 +7,11 @@ urlpatterns = [
 
     path("search/", search, name='search'),
 
-    path('style/<int:pk>/', get_style, name='style'),
-    path('author/<int:pk>/', get_author, name='author'),
+    path('style/<slug:slug>/', get_style, name='style'),
+    path('author/<slug:slug>/', get_author, name='author'),
     path('info/<int:pk>', get_info, name='descriptions'),
 
-    path('add_author/', add_author, name='add_author'),
+    path('add_author/<slug:slug>/', add_author, name='add_author'),
     path('add_samples/', add_samples, name='add_samples'),
     path('published/', add_published, name='published'),
 

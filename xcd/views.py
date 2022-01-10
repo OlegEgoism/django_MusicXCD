@@ -25,9 +25,9 @@ def home(request):
     return render(request, template_name='home.html', context=context)
 
 
-def get_style(request, pk):
-    samples = Samples.objects.filter(style__id=pk, published=True)
-    get_object_or_404(Style, pk=pk)
+def get_style(request, slug):
+    samples = Samples.objects.filter(style__slug=slug, published=True)
+    get_object_or_404(Style, slug=slug)
     style = Style.objects.all()
     author = Author.objects.all()
     context = {
@@ -39,9 +39,9 @@ def get_style(request, pk):
     return render(request, template_name='home.html', context=context)
 
 
-def get_author(request, pk):
-    samples = Samples.objects.filter(author__id=pk, published=True)
-    get_object_or_404(Author, pk=pk)
+def get_author(request, slug):
+    samples = Samples.objects.filter(author__slug=slug, published=True)
+    get_object_or_404(Author, slug=slug)
     style = Style.objects.all()
     author = Author.objects.all()
     context = {
@@ -177,37 +177,41 @@ def logout_user(request):
 
 
 
-def search(request):
-    style = Style.objects.all()
-    author = Author.objects.all()
-    if request.method =='POST':
-        if 'q' in request.GET:
-            return HttpResponse('Мы нашли' % request.POST['q'])
-        else:
-            return HttpResponse('Вы отправили пустой завпрос')
-    context = {
-        'title': 'Опубликовано',
-        'style': style,
-        'author': author,
-    }
-    return render(request, template_name='home.html', context=context)
-
 # def search(request):
-#     str_search = request.GET.get('search')
-#     if str_search:
-#         list_search = str_search.split()
-#         res = []
-#         for i in list_search:
-#             authors = Author.objects.filter(name__icontains=i).exists()
-#
-#             if authors:
-#                 authors = Author.objects.filter(name__icontains=i)
-#                 res.append(authors)
-#                 print(res)
-#             else:
-#                 print('No')
-#     return redirect('home')
+#     style = Style.objects.all()
+#     author = Author.objects.all()
+#     sea = request.GET.get('sea')
+#     if request.method =='POST':
+#         if sea in request.GET:
+#             return HttpResponse('Мы нашли' % request.POST['sea'])
+#         else:
+#             return HttpResponse('Вы отправили пустой завпрос')
+#     context = {
+#         'title': 'Опубликовано',
+#         'style': style,
+#         'author': author,
+#     }
+#     return render(request, template_name='search.html', context=context)
 
+def search(request):
+    str_search = request.GET.get('search')
+    if str_search:
+        list_search = str_search.split()
+        res = []
+        for i in list_search:
+            authors = Author.objects.filter(name__icontains=i).first()
+            descriptions = Samples.objects
+            # print(authors)
+            # if authors:
+            #     authors = Author.objects.filter(name__icontains=i)
+            res.append(authors)
+            #     print(res)
+            # else:
+            #     print('No')
+    return render(request, template_name='search.html', context={'authors':res})
+
+
+    #
     # if request.GET.get("q") != None:
     #     query = request.GET.get("q")
     #     context["array"] = Samples.objects.filter(DB__item__contains=query)
