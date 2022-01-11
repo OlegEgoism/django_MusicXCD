@@ -115,6 +115,11 @@ def add_published(request):
     return render(request, template_name='published_samples.html', context=context)
 
 
+
+
+
+
+
 # AWe#
 
 class RegisterUser(CreateView):
