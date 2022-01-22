@@ -69,3 +69,5 @@ class Format(models.Model):
         verbose_name = 'Формат'
         verbose_name_plural = 'Форматы'
         ordering = ['name']
+
+

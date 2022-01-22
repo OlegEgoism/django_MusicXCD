@@ -22,9 +22,6 @@
 <form action="" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
-<!--    {{ form.errors }}-->
     <button type="submit" class="btn btn-primary btn-block">Добавить семплы</button>
-
-    {% endblock %}
 </form>
-
+{% endblock %}

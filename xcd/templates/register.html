@@ -9,16 +9,15 @@
 {% include 'inc/_sidebar.html' %}
 {% endblock %}
 
+
 {% block content %}
-<h1>Регистрация</h1>
-<form  method="POST">
+<h1>Создать аккаунт</h1>
+<p>Заполните все поля:</p>
+<form action="" method="POST">
+    {{ user_form.as_p }}
     {% csrf_token %}
-
-    {% for f in form %}
-    <p><label class="form-label" for="{{ f.id_for_label }}">{{f.label}}: </label>{{ f }}</p>
-    <div class="form-error">{{ f.errors }}</div>
-    {% endfor %}
-
-    <button type="submit">Регистрация</button>
-    {% endblock %}
+    <button type="submit" class="btn btn-primary btn-block">Отправить данные для регистрации</button>
 </form>
+{% endblock %}
+
+

@@ -3,9 +3,12 @@ from xcd.views import *
 from .import views
 
 urlpatterns = [
-    path('', home, name='home'),
+    # path('', home, name='home'),
+    path('', views.HomeSamples.as_view(), name='home'),
+    # path('style/<slug:slug>/', views.HomeStyle.as_view(), name='style'),
 
-    path("search/", search, name='search'),
+    path("search/", search_all, name='search'),
+    path('register/', get_register, name='register'),
 
     path('style/<slug:slug>/', get_style, name='style'),
     path('author/<slug:slug>/', get_author, name='author'),
@@ -15,12 +18,11 @@ urlpatterns = [
     path('add_samples/', add_samples, name='add_samples'),
     path('published/', add_published, name='published'),
 
-    path('login/', LoginUser.as_view(), name='login'),
-    path('logout/', logout_user, name='logout'),
-    path('register/', RegisterUser.as_view(), name='register'),
+
+    # path('login/', LoginUser.as_view(), name='login'),
+    # path('logout/', logout_user, name='logout'),
+    # path('register/', RegisterUser.as_view(), name='register'),
 
 
 ]
-
-
 

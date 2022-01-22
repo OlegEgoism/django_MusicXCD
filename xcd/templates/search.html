@@ -1,11 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+{% extends 'base.html' %}
+
+{% block title %}
+{{ block.super }}/{{ title }}
+{% endblock %}
+
+
+{% block sidebar %}
+{% include 'inc/_sidebar.html' %}
+{% endblock %}
+
+
 <body>
-{{ author }}
+{{ samples }}
+{{ authors }}
 {{ style }}
 </body>
 </html>
+
+
+
