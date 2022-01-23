@@ -1,27 +1,19 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views import generic
-
+from django.views.generic import ListView, CreateView
 from .models import *
 from .forms import SamplesForm, AddAuthorForm, UserRegistrationForm
-from django.http import HttpResponse, HttpResponseRedirect
-
+from django.http import HttpResponse
 from django.db.models import Q
-from django .views.generic import ListView
 
-# Новые добавления
-from django.contrib.auth import logout, login
-from django.contrib.auth.views import LoginView
-from django.urls import reverse_lazy
 
-class HomeSamples(generic.ListView):
+class HomeSamples(ListView):
     models = Samples
-    template_name = 'samples_list.html'
+    template_name = 'home.html'
     context_object_name = 'samples'
-    # extra_context = {'title': 'Семплы'}
-    # paginate_by = 2
 
     def get_queryset(self):
         return Samples.objects.filter(published=True)
+
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Семплы'
@@ -30,78 +22,55 @@ class HomeSamples(generic.ListView):
         return context
 
 
-# class HomeStyle(generic.ListView):
-#     models = Style
-#     template_name = 'samples_list.html'
-#     context_object_name = 'style'
-#     # extra_context = {'title': 'Семплы'}
-#     # paginate_by = 2
-#
-#     def get_queryset(self):
-#         return Style.objects.all()
-#     def get_context_data(self, *, object_list=None, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['title'] = 'Семплы'
-#         return context
+class HomeAuthor(ListView):
+    model = Author
+    template_name = 'home.html'
+    context_object_name = 'author'
+    allow_empty = False
+
+    def get_queryset(self):
+        return Samples.objects.filter(author__slug=self.kwargs['slug'], published=True)
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Семплы'
+        context['style'] = Style.objects.all()
+        context['author'] = Author.objects.all()
+        return context
 
 
+class HomeStyle(ListView):
+    model = Style
+    template_name = 'home.html'
+    context_object_name = 'style'
+    allow_empty = False
+
+    def get_queryset(self):
+        return Samples.objects.filter(style__slug=self.kwargs['slug'], published=True)
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Семплы'
+        context['style'] = Style.objects.all()
+        context['author'] = Author.objects.all()
+        return context
 
 
+class Descriptions(ListView):
+    model = Samples
+    template_name = 'descriptions.html'
+    context_object_name = 'descriptions'
+    allow_empty = False
 
+    def get_queryset(self):
+        return Samples.objects.filter(id=self.kwargs['pk'], published=True)
 
-# def home(request):
-#     samples = Samples.objects.filter(published=True)
-#     style = Style.objects.all()
-#     author = Author.objects.all()
-#     context = {
-#         'title': 'Семплы',
-#         'samples': samples,
-#         'style': style,
-#         'author': author,
-#     }
-#     return render(request, template_name='home.html', context=context)
-
-
-def get_style(request, slug):
-    samples = Samples.objects.filter(style__slug=slug, published=True)
-    get_object_or_404(Style, slug=slug)
-    style = Style.objects.all()
-    author = Author.objects.all()
-    context = {
-        'title': 'Семплы',
-        'samples': samples,
-        'style': style,
-        'author': author,
-    }
-    return render(request, template_name='home.html', context=context)
-
-
-def get_author(request, slug):
-    samples = Samples.objects.filter(author__slug=slug, published=True)
-    get_object_or_404(Author, slug=slug)
-    style = Style.objects.all()
-    author = Author.objects.all()
-    context = {
-        'title': 'Семплы',
-        'samples': samples,
-        'style': style,
-        'author': author,
-    }
-    return render(request, template_name='home.html', context=context)
-
-
-def get_info(request, pk):
-    samples = Samples.objects.filter(id=pk, published=True)
-    get_object_or_404(Samples, pk=pk)
-    style = Style.objects.all()
-    author = Author.objects.all()
-    context = {
-        'title': 'Информация',
-        'samples': samples,
-        'style': style,
-        'author': author,
-    }
-    return render(request, template_name='info.html', context=context)
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Информация'
+        context['style'] = Style.objects.all()
+        context['author'] = Author.objects.all()
+        return context
 
 
 def add_author(request):
@@ -111,13 +80,12 @@ def add_author(request):
         form_a = AddAuthorForm(request.POST)
         if form_a.is_valid():
             form_a.save()
-            # return redirect('add_samples')
     context = {
         'title': 'Добавить автора',
         'style': style,
         'author': author,
     }
-    return render(request, template_name='published_author.html', context=context)
+    return render(request, template_name='add_author.html', context=context)
 
 
 def add_samples(request):
@@ -136,12 +104,12 @@ def add_samples(request):
         'style': style,
         'author': author,
         'form': form,
-        'form_a': form_a,
+        'form_a': form_a
     }
     return render(request, template_name='add_samples.html', context=context)
 
 
-def add_published(request):
+def add_published_samples(request):
     style = Style.objects.all()
     author = Author.objects.all()
     context = {
@@ -149,7 +117,7 @@ def add_published(request):
         'style': style,
         'author': author,
     }
-    return render(request, template_name='published_samples.html', context=context)
+    return render(request, template_name='add_published_samples.html', context=context)
 
 
 def get_register(request):
@@ -162,14 +130,20 @@ def get_register(request):
             new_user.set_password(user_form.cleaned_data['password1'])
             new_user.username = new_user.email
             new_user.save()
-            return render(request, 'register_ok.html', {'title': 'Регистрация подтверждена', 'style': style, 'author': author, 'new_user': new_user}) # Куда перейдем после регистрации
+            context = {
+                'title': 'Регистрация подтверждена',
+                'style': style,
+                'author': author,
+                'new_user': new_user
+            }
+            return render(request, 'register_ok.html', context=context)  # Куда перейдем после регистрации
     else:
         user_form = UserRegistrationForm()
     context = {
         'title': 'Регистрация',
         'style': style,
         'author': author,
-        'user_form': user_form,
+        'user_form': user_form
     }
     return render(request, 'register.html', context=context)
 
@@ -266,10 +240,10 @@ def search_all(request):
 #     return render(request, template_name='search.html', context={'authors': res})
 
 
-    # if request.GET.get("q") != None:
-    #     query = request.GET.get("q")
-    #     context["array"] = Samples.objects.filter(DB__item__contains=query)
-    # print(request.GET.get('search'))
+# if request.GET.get("q") != None:
+#     query = request.GET.get("q")
+#     context["array"] = Samples.objects.filter(DB__item__contains=query)
+# print(request.GET.get('search'))
 
 # class Search(ListView):
 #     paginate_by = 3
@@ -308,7 +282,7 @@ def search_all(request):
 #     'style': style,
 #     'author': author,
 # }
-# return render(request, template_name='info.html', context=context)
+# return render(request, template_name='descriptions.html', context=context)
 
 
 # authors = Samples.objects.values_list('authors').order_by('authors').distinct()

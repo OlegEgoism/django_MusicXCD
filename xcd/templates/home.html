@@ -11,7 +11,7 @@
 
 
 {% block content %}
-{% for item in samples %}
+{% for item in object_list %}
     <div class="card mb-3">
         <div class="card-header">
             <h5><font color="red"> Стиль: </font> {% for i in item.style.all %} <a href="{% url 'style' i.slug %}">{{ i }}</a>{% endfor %}</h5>
@@ -21,16 +21,16 @@
             <div>
                 {% if item.photo %}
                 <img src="{{ item.photo.url }}"
-                     alt="" width="280" height="200" align="left" vspace="2" hspace="2">
+                     alt="" width="280" height="200" align="left" vspace="2" hspace="2" class="float-left mr-3">
                 {% else %}
                 <img src="https://upload.wikimedia.org/wikipedia/ru/thumb/a/ac/No_image_available.svg/1200px-No_image_available.svg.png"
-                     alt="" width="280" height="200" align="left" vspace="2" hspace="2">
+                     alt="" width="280" height="200" align="left" vspace="2" hspace="2" class="float-left mr-3">
                 {% endif %}
             </div>
-            <div class="media-body">
+
                 <h5><font color="red"> Название: </font> <a> {{ item.title | title }} </a></h5>
-                <h6 class="card-text" >{{ item.descriptions | safe| linebreaks | truncatechars:550 }} <a href="{% url 'descriptions' item.pk %}">Еще</a></h6>
-            </div>
+                <h6 class="card-text" >{{ item.descriptions | safe| linebreaks | truncatechars:200 }} <a href="{% url 'descriptions' item.pk %}">Еще</a></h6>
+
         </div>
         <div class="card-header">
             <a href="{{ item.link }}" class="btn btn-primary">Скачать</a>
