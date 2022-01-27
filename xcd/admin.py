@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.utils.safestring import mark_safe
+
 from .models import Format, Samples, Style, Author
 
 
@@ -20,10 +22,16 @@ class FormatAdmin(admin.ModelAdmin):
 
 
 class SamplesAdmin(admin.ModelAdmin):
-    list_display = ('title', 'size', 'published',)
+    list_display = ('title', 'size', 'published', 'get_photo',)
     search_fields = ('title', 'size',)
     list_editable = ('published',)
     list_filter = ('published', 'author',)
+    def get_photo(self, result_list):
+        if result_list.photo:
+            return mark_safe(f'<img src="{result_list.photo.url}" width="40">')
+        else:
+            return 'Нет фото'
+    get_photo.short_description = 'Изображение'
 
 
 admin.site.register(Author, AuthorAdmin)

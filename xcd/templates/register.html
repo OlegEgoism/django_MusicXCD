@@ -11,8 +11,7 @@
 
 
 {% block content %}
-<h1>Создать аккаунт</h1>
-<p>Заполните все поля:</p>
+<h1>Регистрация пользователя</h1>
 <form action="" method="POST">
     {{ user_form.as_p }}
     {% csrf_token %}

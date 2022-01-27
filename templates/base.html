@@ -18,8 +18,49 @@
         <div class="col-md-3">
             {% block sidebar %} Сайтбар {% endblock %}
         </div>
-        <div class="col-md-9">
+
+        <div class="col-md-8">
+            {% if page_obj.has_other_pages %}
+            <nav aria-label="...">
+                <ul class="pagination">
+                    {% if page_obj.start_index %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.start_index_page_number }}"> Начало </a></li>
+                    {% endif %}
+                    {% for p in page_obj.paginator.page_range %}
+                    {% if page_obj.number == p %}
+                    <li class="page-item active" aria-current="page"><a class="page-link" href="?page={{ p }}">{{ p }} <span class="sr-only"></span></a></li>
+                    {% elif p > page_obj.number|add:-3 and p < page_obj.number|add:3 %}
+                    <li class="page-item"><a class="page-link" href="?page={{ p }}">{{ p }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+                    {% if page_obj.has_other_pages %}
+                    <li class="page-item"><a class="page-link" href="?page={{ paginator.num_pages }}"> Конец </a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+
             {% block content %} Контент {% endblock %}
+
+            {% if page_obj.has_other_pages %}
+            <nav aria-label="...">
+                <ul class="pagination">
+                    {% if page_obj.start_index %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.start_index_page_number }}"> Начало </a></li>
+                    {% endif %}
+                    {% for p in page_obj.paginator.page_range %}
+                    {% if page_obj.number == p %}
+                    <li class="page-item active" aria-current="page"><a class="page-link" href="?page={{ p }}">{{ p }} <span class="sr-only"></span></a></li>
+                    {% elif p > page_obj.number|add:-3 and p < page_obj.number|add:3 %}
+                    <li class="page-item"><a class="page-link" href="?page={{ p }}">{{ p }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+                    {% if page_obj.has_other_pages %}
+                    <li class="page-item"><a class="page-link" href="?page={{ paginator.num_pages }}"> Конец </a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
         </div>
     </div>
 </div>
@@ -33,7 +74,7 @@
 <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
 </body>
 
-<body><h6>© 2023 Персональная разработка <a VK href="https://vk.com/id21286161">Oleg Pustovalov</a> </h6>
+<body><h6>© 2023 Персональная разработка <a VK href="https://vk.com/id21286161">Pustovalov</a></h6>
 </body>
 </html>
 

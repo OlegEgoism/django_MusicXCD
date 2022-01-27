@@ -1,8 +1,13 @@
-from django.urls import path
+import debug_toolbar
+from django.urls import path, include
 from xcd.views import *
 from .import views
 
+
+
 urlpatterns = [
+    path('__debug__/', include(debug_toolbar.urls)),
+
     path('', views.HomeSamples.as_view(), name='home'),
     path('author/<slug:slug>/', views.HomeAuthor.as_view(), name='author'),
     path('style/<slug:slug>/', views.HomeStyle.as_view(), name='style'),
@@ -15,6 +20,7 @@ urlpatterns = [
     path('register/', get_register, name='register'),
     path("search/", search_all, name='search'),
 
+    # path('test/', test, name='test'),
 
     # path('', home, name='home'),
     # path('author/<slug:slug>/', get_author, name='author'),

@@ -42,7 +42,7 @@ class UserRegistrationForm(forms.ModelForm):
     password2 = forms.CharField(label='Пароль (подтверждение)', validators=[password], widget=forms.PasswordInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Введите пароль не мение 5 символов'}))
     first_name = forms.CharField(label='Фамилия пользователья', widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Введите персональные данные'}))
     last_name = forms.CharField(label='Имя пользователья', widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Введите персональные данные'}))
-    email = forms.EmailField(label='Почта', widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Электронная почта'}))
+    email = forms.EmailField(label='Почта', widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Электронная почта (e-mail)'}))
     phone = forms.CharField(label='Телефон', widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Номер телефона с кодом страны'}))
 
     class Meta:
