@@ -3,8 +3,6 @@ from django.urls import path, include
 from xcd.views import *
 from .import views
 
-
-
 urlpatterns = [
     path('__debug__/', include(debug_toolbar.urls)),
 
@@ -32,4 +30,3 @@ urlpatterns = [
     # path('register/', RegisterUser.as_view(), name='register'),
 
 ]
-
