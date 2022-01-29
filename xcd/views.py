@@ -4,20 +4,9 @@ from .models import *
 from .forms import SamplesForm, AddAuthorForm, UserRegistrationForm
 from django.http import HttpResponse
 from django.db.models import Q
-from .utils import MyMixin
+from django.contrib import messages
 
-from django.core.paginator import Paginator
-
-
-# def page(request):
-#     # objects = []
-#     # paginator = Paginator({[]}, 4)
-#     page_num = request.GET.get()
-#     page_objects = Paginator().get_page(page_num)
-#     return render(request, {'page_obj': page_objects})
-
-
-class HomeSamples(MyMixin, ListView):
+class HomeSamples(ListView):
     models = Samples
     template_name = 'home.html'
     context_object_name = 'samples'
@@ -28,7 +17,7 @@ class HomeSamples(MyMixin, ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = self.get_upper('Семплы')
+        context['title'] = 'Семплы'
         context['style'] = Style.objects.all()
         context['author'] = Author.objects.all()
         return context
@@ -160,6 +149,27 @@ def get_register(request):
         'user_form': user_form
     }
     return render(request, 'register.html', context=context)
+
+
+def get_login(request):
+    style = Style.objects.all()
+    author = Author.objects.all()
+    context = {
+        'title': 'Регистрация подтверждена',
+        'style': style,
+        'author': author,
+        }
+    return render(request, 'login.html', context=context)
+
+
+
+
+
+
+
+
+
+
 
 
 def search_all(request):

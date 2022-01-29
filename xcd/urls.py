@@ -16,6 +16,8 @@ urlpatterns = [
     path('published/', add_published_samples, name='published'),
 
     path('register/', get_register, name='register'),
+    path('login/', get_login, name='login'),
+
     path("search/", search_all, name='search'),
 
     # path('test/', test, name='test'),

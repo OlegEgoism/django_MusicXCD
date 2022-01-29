@@ -29,7 +29,7 @@
                     {% for p in page_obj.paginator.page_range %}
                     {% if page_obj.number == p %}
                     <li class="page-item active" aria-current="page"><a class="page-link" href="?page={{ p }}">{{ p }} <span class="sr-only"></span></a></li>
-                    {% elif p > page_obj.number|add:-3 and p < page_obj.number|add:3 %}
+                    {% elif p > page_obj.number|add:-2 and p < page_obj.number|add:4 %}
                     <li class="page-item"><a class="page-link" href="?page={{ p }}">{{ p }}</a></li>
                     {% endif %}
                     {% endfor %}
@@ -41,7 +41,6 @@
             {% endif %}
 
             {% block content %} Контент {% endblock %}
-
             {% if page_obj.has_other_pages %}
             <nav aria-label="...">
                 <ul class="pagination">
@@ -51,7 +50,7 @@
                     {% for p in page_obj.paginator.page_range %}
                     {% if page_obj.number == p %}
                     <li class="page-item active" aria-current="page"><a class="page-link" href="?page={{ p }}">{{ p }} <span class="sr-only"></span></a></li>
-                    {% elif p > page_obj.number|add:-3 and p < page_obj.number|add:3 %}
+                    {% elif p > page_obj.number|add:-2 and p < page_obj.number|add:4 %}
                     <li class="page-item"><a class="page-link" href="?page={{ p }}">{{ p }}</a></li>
                     {% endif %}
                     {% endfor %}
@@ -61,6 +60,7 @@
                 </ul>
             </nav>
             {% endif %}
+
         </div>
     </div>
 </div>
@@ -74,7 +74,7 @@
 <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
 </body>
 
-<body><h6>© 2023 Персональная разработка <a VK href="https://vk.com/id21286161">Pustovalov</a></h6>
+<body><h6>© 2022 Pазработка <a VK href="https://vk.com/id21286161">Pustovalov</a></h6>
 </body>
 </html>
 

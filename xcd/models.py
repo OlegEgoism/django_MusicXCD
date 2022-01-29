@@ -20,6 +20,7 @@ class Samples(models.Model):
     class Meta:
         verbose_name = 'Семплы'
         verbose_name_plural = 'Семплы'
+        ordering = ['-id']
 
 
 class Author(models.Model):

@@ -11,11 +11,17 @@
 
 
 {% block content %}
-<h1>Поздравляем вы зарегестрированы в системе</h1>
+<h1>Вы зарегестрированы в системе</h1>
 <div>
     <form class="d-flex" action="{% url 'home' %}" method="GET">
-        <button type="submit" class="btn btn-primary btn-block">Продолжиь</button>
+        <button class="btn btn-outline-primary" type="submit">Подолжить</button>
     </form>
 </div>
+<div>
+    <form class="d-flex" action="{% url 'login' %}">
+        <button class="btn btn-outline-primary" type="submit">Войти</button>
+    </form>
+</div>
+
 {% endblock %}
 

@@ -3,23 +3,22 @@
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="collapse navbar-collapse">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item"><a class="nav-link" href="{% url 'home' %}"><font color="#0d6efd">Главная</font></a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'add_samples' %}"><font color="#0d6efd">Добавить семплы</font></a></li>
         </ul>
         <form class="d-flex" action="{% url 'search' %}" method="GET">
-            <input class="form-control me-0" type="text" placeholder="Поиск" aria-label="Search" name="search_html">
+            <input class="form-control me-1" type="text" placeholder="Поиск" aria-label="Search" name="search_html">
             <button class="btn btn-outline-primary" type="submit">Поиск</button>
         </form>
     </div>
 
     <div>
-        <form class="d-flex" action="{% url 'register' %}" method="GET">
-              <button class="btn btn-outline-primary" type="submit">Регистрация</button>
-        </form>
-
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item"><a class="nav-link" href="{% url 'login' %}"><font color="#0d6efd">Вход</font></a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'register' %}"><font color="#0d6efd">Регистрация</font></a></li>
+        </ul>
     </div>
 </nav>
 
