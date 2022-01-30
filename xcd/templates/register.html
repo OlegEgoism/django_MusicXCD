@@ -12,10 +12,10 @@
 
 {% block content %}
 <h1>Регистрация пользователя</h1>
-<form action="" method="POST">
-    {{ user_form.as_p }}
+<form method="POST">
     {% csrf_token %}
-    <button type="submit" class="btn btn-primary btn-block">Отправить данные для регистрации</button>
+    {{ user_form.as_p }}
+    <button type="submit" class="btn btn-outline-primary">Отправить данные для регистрации</button>
 </form>
 {% endblock %}
 

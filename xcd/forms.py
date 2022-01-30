@@ -1,3 +1,4 @@
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django import forms
@@ -36,18 +37,16 @@ def password(value):
     if len(value) < 5:
         raise ValidationError('Пароль должен содержать не меньше 5 символов')
 
-class UserRegistrationForm(forms.ModelForm):
-    username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Напишите свой логин'}))
+class UserRegistrationForm(UserCreationForm): #UserCreationForm #forms.Form
+    username = forms.CharField(label='Имя пользователя', widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Напишите свой логин'}))
     password1 = forms.CharField(label='Пароль', validators=[password], widget=forms.PasswordInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Введите пароль не мение 5 символов'}))
     password2 = forms.CharField(label='Пароль (подтверждение)', validators=[password], widget=forms.PasswordInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Введите пароль не мение 5 символов'}))
-    first_name = forms.CharField(label='Фамилия пользователья', widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Введите персональные данные'}))
-    last_name = forms.CharField(label='Имя пользователья', widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Введите персональные данные'}))
     email = forms.EmailField(label='Почта', widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Электронная почта (e-mail)'}))
     phone = forms.CharField(label='Телефон', widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Номер телефона с кодом страны'}))
 
     class Meta:
         model = User
-        fields = ('username', 'password1', 'password2', 'first_name', 'last_name', 'email', 'phone')
+        fields = ('username', 'password1', 'password2', 'email', 'phone')
 
     def clean_password2(self):
         password1 = self.cleaned_data.get('password1')
@@ -63,6 +62,18 @@ class UserRegistrationForm(forms.ModelForm):
         except User.DoesNotExist:
             return email
         raise forms.ValidationError('Этот почтовый адрес уже зарегистрирован')
+
+
+class UserLoginForm(AuthenticationForm): #AuthenticationForm #forms.Form
+    username = forms.CharField(label='Имя пользователя', widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Напишите свой логин'}))
+    password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Введите пароль не мение 5 символов'}))
+
+
+
+
+
+
+
 
 
 

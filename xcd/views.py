@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import *
 from .models import *
-from .forms import SamplesForm, AddAuthorForm, UserRegistrationForm
+from .forms import SamplesForm, AddAuthorForm, UserRegistrationForm, UserLoginForm
 from django.http import HttpResponse
 from django.db.models import Q
-from django.contrib import messages
+from django.contrib.auth import login, logout, authenticate
+
 
 class HomeSamples(ListView):
     models = Samples
@@ -154,10 +155,19 @@ def get_register(request):
 def get_login(request):
     style = Style.objects.all()
     author = Author.objects.all()
+    if request.method == 'POST':
+        user_form = UserLoginForm(data=request.POST)
+        if user_form.is_valid():
+            user = user_form.get_user()
+            login(request, user)
+            return redirect('home.html')
+    else:
+        user_form = UserLoginForm
     context = {
-        'title': 'Регистрация подтверждена',
+        'title': 'Войти в систему',
         'style': style,
         'author': author,
+        'user_form': user_form
         }
     return render(request, 'login.html', context=context)
 
