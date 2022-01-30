@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ block.super }}/{{ title }}
+{% endblock %}
+
+
+{% block sidebar %}
+{% include 'inc/_sidebar.html' %}
+{% endblock %}
+
+
+{% block content %}
+<h1>Письмо отправлено</h1>
+<div>
+    <form class="d-flex" action="{% url 'home' %}" method="GET">
+        <button class="btn btn-outline-primary" type="submit">Подолжить</button>
+    </form>
+    <form class="d-flex" action="{% url 'email' %}" method="GET">
+        <button class="btn btn-outline-primary" type="submit">Отправить новое писмо</button>
+    </form>
+</div>
+{% endblock %}
+

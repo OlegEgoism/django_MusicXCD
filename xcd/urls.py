@@ -5,6 +5,7 @@ from .import views
 
 urlpatterns = [
     path('__debug__/', include(debug_toolbar.urls)),
+    path('captcha/', include('captcha.urls')),
 
     path('', views.HomeSamples.as_view(), name='home'),
     path('author/<slug:slug>/', views.HomeAuthor.as_view(), name='author'),
@@ -17,6 +18,8 @@ urlpatterns = [
 
     path('register/', get_register, name='register'),
     path('login/', get_login, name='login'),
+    path('logout/', get_logout, name='logout'),
+    path('email/', get_email, name='email'),
 
     path("search/", search_all, name='search'),
 

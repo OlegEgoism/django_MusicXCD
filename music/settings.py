@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
     'xcd',
     'debug_toolbar',
+    'captcha'
 ]
 
 MIDDLEWARE = [
@@ -136,3 +137,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'vp3231963@gmail.com' #имя почты
+EMAIL_HOST_PASSWORD = 'dinamo258' #пароль от почты
+EMAIL_PORT = 587
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
+CAPTCHA_NOISE_FUNCTIONS = None

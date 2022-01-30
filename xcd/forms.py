@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django import forms
 from .models import *
+from captcha.fields import CaptchaField
 
 
 class AddAuthorForm(forms.ModelForm):
@@ -37,8 +38,8 @@ def password(value):
     if len(value) < 5:
         raise ValidationError('Пароль должен содержать не меньше 5 символов')
 
-class UserRegistrationForm(UserCreationForm): #UserCreationForm #forms.Form
-    username = forms.CharField(label='Имя пользователя', widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Напишите свой логин'}))
+class UserRegistrationForm(forms.ModelForm): #UserCreationForm #forms.Form
+    username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Напишите свой логин'}))
     password1 = forms.CharField(label='Пароль', validators=[password], widget=forms.PasswordInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Введите пароль не мение 5 символов'}))
     password2 = forms.CharField(label='Пароль (подтверждение)', validators=[password], widget=forms.PasswordInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Введите пароль не мение 5 символов'}))
     email = forms.EmailField(label='Почта', widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Электронная почта (e-mail)'}))
@@ -65,8 +66,27 @@ class UserRegistrationForm(UserCreationForm): #UserCreationForm #forms.Form
 
 
 class UserLoginForm(AuthenticationForm): #AuthenticationForm #forms.Form
-    username = forms.CharField(label='Имя пользователя', widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Напишите свой логин'}))
+    username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Напишите свой логин'}))
     password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Введите пароль не мение 5 символов'}))
+
+
+class EmailForm(forms.Form):
+    subject = forms.CharField(label='Тема письма', widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Напишите тему письма'}))
+    content = forms.CharField(label='Текст письма', widget=forms.Textarea(attrs={'style': 'margin:10px; padding:10px; height:200px', 'class': 'form-control col-sm-8', 'placeholder': 'Напишите текст письма'}))
+    capthca = CaptchaField(label='')
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

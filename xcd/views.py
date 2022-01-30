@@ -1,11 +1,12 @@
+from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import *
 from .models import *
-from .forms import SamplesForm, AddAuthorForm, UserRegistrationForm, UserLoginForm
+from .forms import SamplesForm, AddAuthorForm, UserRegistrationForm, UserLoginForm, EmailForm
 from django.http import HttpResponse
 from django.db.models import Q
-from django.contrib.auth import login, logout, authenticate
-
+from django.contrib.auth import login, logout
+from django.core.mail import send_mail
 
 class HomeSamples(ListView):
     models = Samples
@@ -132,8 +133,9 @@ def get_register(request):
         if user_form.is_valid():
             new_user = user_form.save(commit=False)
             new_user.set_password(user_form.cleaned_data['password1'])
-            new_user.username = new_user.email
+            new_user.email = new_user.email
             new_user.save()
+            login(request, new_user)
             context = {
                 'title': 'Регистрация подтверждена',
                 'style': style,
@@ -151,6 +153,10 @@ def get_register(request):
     }
     return render(request, 'register.html', context=context)
 
+def get_logout(request):
+    logout(request)
+    return redirect('login')
+
 
 def get_login(request):
     style = Style.objects.all()
@@ -160,7 +166,7 @@ def get_login(request):
         if user_form.is_valid():
             user = user_form.get_user()
             login(request, user)
-            return redirect('home.html')
+            return redirect('home')
     else:
         user_form = UserLoginForm
     context = {
@@ -170,6 +176,40 @@ def get_login(request):
         'user_form': user_form
         }
     return render(request, 'login.html', context=context)
+
+
+def get_email(request):
+    style = Style.objects.all()
+    author = Author.objects.all()
+    if request.method == 'POST':
+        emailform = EmailForm(request.POST)
+        if emailform.is_valid():
+            email = send_mail(emailform.cleaned_data['subject'], emailform.cleaned_data['content'], 'vp3231963@gmail.com', ['olegpustovalov220@gmail.com'], fail_silently=True)
+            if email:
+                # messages.success(request, 'Письмо отправлено!')
+                context = {
+                    'title': 'Письмо отправлено',
+                    'style': style,
+                    'author': author,
+                }
+                return render(request, 'email_ok.html', context=context)
+        # else:
+        #     messages.error(request, 'Ошибка отправки письма')
+    else:
+        emailform = EmailForm()
+        context = {
+            'title': 'Обратная связь',
+            'style': style,
+            'author': author,
+            'emailform': emailform
+        }
+        return render(request, 'email.html', context=context)
+
+
+
+
+
+
 
 
 
@@ -198,6 +238,25 @@ def search_all(request):
         'style': style,
     }
     return render(request, template_name='search.html', context=context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # AWe#
 # class LoginUser(LoginView):
