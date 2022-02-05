@@ -241,6 +241,7 @@ def search_all(request):
         return render(request, template_name='search_no.html', context=context)
 
 
+
 # from django.db.models import Q
 # sample = Samples.objects.filter(Q(title__icontains=your_search_query) | Q(intro__icontains=your_search_query) | Q(content__icontains=your_search_query))
 
