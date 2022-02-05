@@ -22,6 +22,13 @@ urlpatterns = [
     path('email/', get_email, name='email'),
 
     path("search/", search_all, name='search'),
+    # url(r'^$', views.ESearchView.as_view(), name='index'),
+
+    # path('search/', SearchResultsView.as_view(), name='search'),
+    #
+
+
+
 
     # path('test/', test, name='test'),
 

@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django import forms
@@ -44,6 +44,7 @@ class UserRegistrationForm(forms.ModelForm): #UserCreationForm #forms.Form
     password2 = forms.CharField(label='Пароль (подтверждение)', validators=[password], widget=forms.PasswordInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Введите пароль не мение 5 символов'}))
     email = forms.EmailField(label='Почта', widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Электронная почта (e-mail)'}))
     phone = forms.CharField(label='Телефон', widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Номер телефона с кодом страны'}))
+    capthca = CaptchaField(label='')
 
     class Meta:
         model = User
@@ -71,47 +72,9 @@ class UserLoginForm(AuthenticationForm): #AuthenticationForm #forms.Form
 
 
 class EmailForm(forms.Form):
-    subject = forms.CharField(label='Тема письма', widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Напишите тему письма'}))
+    subject = forms.EmailField(label='Email', required=True, widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Напишите вашу почту'}))
     content = forms.CharField(label='Текст письма', widget=forms.Textarea(attrs={'style': 'margin:10px; padding:10px; height:200px', 'class': 'form-control col-sm-8', 'placeholder': 'Напишите текст письма'}))
     capthca = CaptchaField(label='')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # def save(self, commit=True):
-    #     user = super(UserCreationForm, self).save(commit=False)
-    #     user.set_password(
-    #         self.cleaned_data['password1'])  # важно тут передавать password1 или 2. Но не password как в примере выше
-    #     if commit:
-    #         user.save()
-    #     return user
-
-    # def clean(self):
-    #     cleaned_data = super().clean(self)
-    #     if User.objects.filter(email=cleaned_data.get('email')).exists():
-    #         self.fields.add_error('email', "Эта почта уже зарегестрированна")
-    #     return cleaned_data
-
-
 
 
 

@@ -10,12 +10,8 @@
 {% endblock %}
 
 
-<body>
-{{ samples }}
-{{ authors }}
-{{ style }}
-</body>
-</html>
-
+<form action="{% url 'search' %}" method="get">
+  <input name="q" type="text" placeholder="search...">
+</form>
 
 

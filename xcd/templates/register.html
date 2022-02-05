@@ -17,6 +17,8 @@
     {{ user_form.as_p }}
     <button type="submit" class="btn btn-outline-primary">Отправить данные для регистрации</button>
 </form>
+    {{ form.captcha }}
+    {{ form.captcha.errors }}
 {% endblock %}
 
 

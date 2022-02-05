@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ block.super }}/{{ title }}
+{% endblock %}
+
+
+{% block sidebar %}
+{% include 'inc/_sidebar.html' %}
+{% endblock %}
+
+
+{% block content %}
+<h1>Произошла ошибка отправки письма, попробуйте снова</h1>
+<div>
+    <form class="d-flex" action="{% url 'email' %}" method="GET">
+        <button class="btn btn-outline-primary" type="submit">Повторить</button>
+    </form>
+</div>
+<img src="https://blog.sqlauthority.com/wp-content/uploads/2016/06/mail-error.png" alt="" width="200" height="200" align="left" vspace="2" hspace="2" class="float-left mr-3">
+
+
+{% endblock %}
+

@@ -1,12 +1,13 @@
 from django.contrib import messages
-from django.shortcuts import render, get_object_or_404, redirect
+from django.core.mail import send_mail, BadHeaderError
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import *
 from .models import *
 from .forms import SamplesForm, AddAuthorForm, UserRegistrationForm, UserLoginForm, EmailForm
-from django.http import HttpResponse
 from django.db.models import Q
 from django.contrib.auth import login, logout
-from django.core.mail import send_mail
+
 
 class HomeSamples(ListView):
     models = Samples
@@ -88,7 +89,7 @@ def add_author(request):
     context = {
         'title': 'Добавить автора',
         'style': style,
-        'author': author,
+        'author': author
     }
     return render(request, template_name='add_author.html', context=context)
 
@@ -153,10 +154,6 @@ def get_register(request):
     }
     return render(request, 'register.html', context=context)
 
-def get_logout(request):
-    logout(request)
-    return redirect('login')
-
 
 def get_login(request):
     style = Style.objects.all()
@@ -178,66 +175,285 @@ def get_login(request):
     return render(request, 'login.html', context=context)
 
 
+def get_logout(request):
+    logout(request)
+    return redirect('login')
+
+
 def get_email(request):
     style = Style.objects.all()
     author = Author.objects.all()
     if request.method == 'POST':
         emailform = EmailForm(request.POST)
         if emailform.is_valid():
-            email = send_mail(emailform.cleaned_data['subject'], emailform.cleaned_data['content'], 'vp3231963@gmail.com', ['olegpustovalov220@gmail.com'], fail_silently=True)
-            if email:
-                # messages.success(request, 'Письмо отправлено!')
+            mail = send_mail(emailform.cleaned_data['subject'], emailform.cleaned_data['content'], '',  recipient_list=('olegpustovalov220@gmail.com',), fail_silently=True)
+            if mail:
+                context = {
+                    'title': 'Обратная связь',
+                    'style': style,
+                    'author': author,
+                    'emailform': emailform
+                }
+                return render(request, 'email_ok.html', context=context)
+            else:
                 context = {
                     'title': 'Письмо отправлено',
                     'style': style,
                     'author': author,
+                    'emailform': emailform
                 }
-                return render(request, 'email_ok.html', context=context)
-        # else:
-        #     messages.error(request, 'Ошибка отправки письма')
+                return render(request, 'email_error.html', context=context)
     else:
         emailform = EmailForm()
-        context = {
-            'title': 'Обратная связь',
-            'style': style,
-            'author': author,
-            'emailform': emailform
-        }
-        return render(request, 'email.html', context=context)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    context = {
+        'title': 'Ошибка отправки письма',
+        'style': style,
+        'author': author,
+        'emailform': emailform
+    }
+    return render(request, 'email.html', context=context)
 
 
 def search_all(request):
     search_query = request.GET.get('search_html', '')
     if search_query:
-        samples = Samples.objects.filter(Q(title__icontains=search_query) | Q(descriptions__icontains=search_query))
-        authors = Author.objects.filter(name__contains=search_query)
-        style = Author.objects.filter(name__contains=search_query)
-        print(samples, authors, style)
+        sample = Samples.objects.filter(Q(title__icontains=search_query) | Q(descriptions__contains=search_query))
+        author = Author.objects.filter(name__icontains=search_query)
+        style = Style.objects.filter(name__icontains=search_query)
+        print(sample, author, style)
+        context = {
+            'title': 'Поиск',
+            'sample': sample,
+            'author': author,
+            'style': style,
+        }
+        return render(request, template_name='search.html', context=context)
     else:
-        return HttpResponse('Ничего не найдено')
-    context = {
-        'title': 'Поиск',
-        'samples': samples,
-        'authors': authors,
-        'style': style,
-    }
-    return render(request, template_name='search.html', context=context)
+        sample = Samples.objects.all()
+        style = Style.objects.all()
+        author = Author.objects.all()
+        context = {
+            'title': 'Поиск',
+            'sample': sample,
+            'author': author,
+            'style': style,
+        }
+        return render(request, template_name='search_no.html', context=context)
+
+
+# from django.db.models import Q
+# sample = Samples.objects.filter(Q(title__icontains=your_search_query) | Q(intro__icontains=your_search_query) | Q(content__icontains=your_search_query))
+
+
+
+# class SearchResultsView(ListView):
+#     model = Samples
+#     template_name = 'search.html'
+#
+#     def get_queryset(self):
+#         query = self.request.GET.get('q')
+#         object_list = Samples.objects.filter(Q(title__icontains=query))
+#         return object_list
+
+# def search(request):
+#     style = Style.objects.all()
+#     author = Author.objects.all()
+#     sea = request.GET.get('sea')
+#     if request.method =='POST':
+#         if sea in request.GET:
+#             return HttpResponse('Мы нашли' % request.POST['sea'])
+#         else:
+#             return HttpResponse('Вы отправили пустой завпрос')
+#     context = {
+#         'title': 'Опубликовано',
+#         'style': style,
+#         'author': author,
+#     }
+#     return render(request, template_name='search.html', context=context)
+
+
+# # Почти работает
+# def search(request):
+#     str_search = request.GET.get('search')
+#     if str_search:
+#         list_search = str_search.split()
+#         res = []
+#         for i in list_search:
+#             authors = Author.objects.filter(name__icontains=i).first()
+#             descriptions = Samples.objects
+#             # print(authors)
+#             # if authors:
+#             #     authors = Author.objects.filter(name__icontains=i)
+#             res.append(authors)
+#             #     print(res)
+#             # else:
+#             #     print('No')
+#     return render(request, template_name='search.html', context={'authors': res})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# def password_reset_form(request):
+#     if request.method == 'GET':
+#         form = PasswordResetForm()
+#     else:
+#         form = PasswordResetForm(request.POST)
+#
+#         if form.is_valid():
+#             email = form.cleaned_data['email']
+#
+#             content_dict = {
+#                 'email': email,
+#                 'domain': temp_data.DOMAIN,
+#                 'site_name': temp_data.SITE_NAME,
+#                 'protocol': temp_data.PROTOCOL,
+#                 }
+#
+#             subject = content_dict.get('site_name')+ ' - Password Reset'
+#             content = render_to_string('portal/password_reset_email.html', content_dict)
+#             send_mail(subject, content, temp_data.FIBRE_CONTACT_EMAIL, [email])
+#
+#             return render(request, 'portal/password_reset_done.html', {'form': form,})
+#
+#     return render(request, 'portal/password_reset_form.html', {'form': form,})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# def get_email(request):
+#     style = Style.objects.all()
+#     author = Author.objects.all()
+#     # if request.method == 'GET':
+#     #     emailform = EmailForm()
+#     if request.method == 'POST':
+#         emailform = EmailForm(request.POST)
+#         if emailform.is_valid():
+#             mail = send_mail( emailform.cleaned_data['subject'], emailform.cleaned_data['content'], emailform.cleanad_data['from_email'], fail_silently=True)
+#             if mail:
+#                 # messages.success(request, 'Письмо отправлено!')
+#                 context = {
+#                     'title': 'Обратная связь',
+#                     'style': style,
+#                     'author': author,
+#                     'emailform': emailform
+#                 }
+#                 return render(request, 'email_ok.html', context=context)
+#             else:
+#                 return render(request, 'email_error.html')
+#                 # messages.error(request, 'Ошибка отправки')
+#         # else:
+#         #     messages.error(request, 'Ошибка валидации')
+#     else:
+#         emailform = EmailForm()
+#     context = {
+#         'title': 'Обратная связь',
+#         'style': style,
+#         'author': author,
+#         'emailform': emailform
+#     }
+#     return render(request, 'email.html', context=context)
+
+
+
+
+
+
+
+
+
+# def get_email(request):
+#     style = Style.objects.all()
+#     author = Author.objects.all()
+#     subject = request.POST.get('subject', '')
+#     message = request.POST.get('message', '')
+#     from_email = request.POST.get('from_email', '')
+#     if subject and message and from_email:
+#         try:
+#             context = {
+#                 'title': 'Обратная связь',
+#                 'style': style,
+#                 'author': author,
+#                 'from_email': from_email
+#             }
+#             send_mail(subject, message, from_email, ['olegpustovalov220@gmail.com'])
+#         except BadHeaderError:
+#             return HttpResponse('Invalid header found.')
+#         return HttpResponseRedirect('email.html')
+#         #     return render(request, 'email.html', context=context)
+#         # return render(request, 'email.html', context=context)
+#     else:
+#         context = {
+#             'title': 'Обратная связь',
+#             'style': style,
+#             'author': author,
+#             'from_email': from_email
+#         }
+#         return render(request, 'email.html', context=context)
+#         # return HttpResponse('Make sure all fields are entered and valid.')
+
+
+
+
+
+# def contact_view(request):
+#     # если метод GET, вернем форму
+#     if request.method == 'GET':
+#         form = ContactForm()
+#     elif request.method == 'POST':
+#         # если метод POST, проверим форму и отправим письмо
+#         form = ContactForm(request.POST)
+#         if form.is_valid():
+#             subject = form.cleaned_data['subject']
+#             from_email = form.cleaned_data['from_email']
+#             message = form.cleaned_data['message']
+#             try:
+#                 send_mail(f'{subject} от {from_email}', message,
+#                           DEFAULT_FROM_EMAIL, RECIPIENTS_EMAIL)
+#             except BadHeaderError:
+#                 return HttpResponse('Ошибка в теме письма.')
+#             return redirect('success')
+#     else:
+#         return HttpResponse('Неверный запрос.')
+#     return render(request, "contact.html", {'form': form})
+#
+#
+# def success_view(request):
+#     return HttpResponse('Приняли! Спасибо за вашу заявку.')
+
+
+
+
 
 
 
@@ -292,40 +508,7 @@ def search_all(request):
 #         ...
 
 
-# def search(request):
-#     style = Style.objects.all()
-#     author = Author.objects.all()
-#     sea = request.GET.get('sea')
-#     if request.method =='POST':
-#         if sea in request.GET:
-#             return HttpResponse('Мы нашли' % request.POST['sea'])
-#         else:
-#             return HttpResponse('Вы отправили пустой завпрос')
-#     context = {
-#         'title': 'Опубликовано',
-#         'style': style,
-#         'author': author,
-#     }
-#     return render(request, template_name='search.html', context=context)
 
-
-# # Почти работает
-# def search(request):
-#     str_search = request.GET.get('search')
-#     if str_search:
-#         list_search = str_search.split()
-#         res = []
-#         for i in list_search:
-#             authors = Author.objects.filter(name__icontains=i).first()
-#             descriptions = Samples.objects
-#             # print(authors)
-#             # if authors:
-#             #     authors = Author.objects.filter(name__icontains=i)
-#             res.append(authors)
-#             #     print(res)
-#             # else:
-#             #     print('No')
-#     return render(request, template_name='search.html', context={'authors': res})
 
 
 # if request.GET.get("q") != None:
