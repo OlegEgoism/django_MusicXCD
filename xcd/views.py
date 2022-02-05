@@ -215,14 +215,20 @@ def get_email(request):
 
 
 def search_all(request):
-    search_query = request.GET.get('search_html', '')
+    search_query = request.GET.get('search_Q', '')
+    print(search_query)
     if search_query:
-        sample = Samples.objects.filter(Q(title__icontains=search_query) | Q(descriptions__contains=search_query))
-        author = Author.objects.filter(name__icontains=search_query)
-        style = Style.objects.filter(name__icontains=search_query)
-        print(sample, author, style)
+        sample_search = Samples.objects.filter(Q(title__icontains=search_query) | Q(descriptions__icontains=search_query))
+        print(sample_search)
+        # author = Author.objects.filter(name__icontains=search_query)
+        # style = Style.objects.filter(name__icontains=search_query)
+        # print(sample, author, style)
+        sample = Samples.objects.all()
+        style = Style.objects.all()
+        author = Author.objects.all()
         context = {
             'title': 'Поиск',
+            'sample_search': sample_search,
             'sample': sample,
             'author': author,
             'style': style,
@@ -242,21 +248,12 @@ def search_all(request):
 
 
 
-# from django.db.models import Q
-# sample = Samples.objects.filter(Q(title__icontains=your_search_query) | Q(intro__icontains=your_search_query) | Q(content__icontains=your_search_query))
 
 
 
-# class SearchResultsView(ListView):
-#     model = Samples
-#     template_name = 'search.html'
-#
-#     def get_queryset(self):
-#         query = self.request.GET.get('q')
-#         object_list = Samples.objects.filter(Q(title__icontains=query))
-#         return object_list
 
-# def search(request):
+
+# def search_all(request):
 #     style = Style.objects.all()
 #     author = Author.objects.all()
 #     sea = request.GET.get('sea')
@@ -273,15 +270,15 @@ def search_all(request):
 #     return render(request, template_name='search.html', context=context)
 
 
-# # Почти работает
-# def search(request):
+# Почти работает
+# def search_all(request):
 #     str_search = request.GET.get('search')
 #     if str_search:
 #         list_search = str_search.split()
 #         res = []
 #         for i in list_search:
 #             authors = Author.objects.filter(name__icontains=i).first()
-#             descriptions = Samples.objects
+#             # descriptions = Samples.objects
 #             # print(authors)
 #             # if authors:
 #             #     authors = Author.objects.filter(name__icontains=i)
@@ -289,7 +286,7 @@ def search_all(request):
 #             #     print(res)
 #             # else:
 #             #     print('No')
-#     return render(request, template_name='search.html', context={'authors': res})
+#     return render(request, template_name='search.html', context={'authors': authors})
 
 
 
@@ -346,44 +343,6 @@ def search_all(request):
 
 
 
-
-
-
-
-
-
-# def get_email(request):
-#     style = Style.objects.all()
-#     author = Author.objects.all()
-#     # if request.method == 'GET':
-#     #     emailform = EmailForm()
-#     if request.method == 'POST':
-#         emailform = EmailForm(request.POST)
-#         if emailform.is_valid():
-#             mail = send_mail( emailform.cleaned_data['subject'], emailform.cleaned_data['content'], emailform.cleanad_data['from_email'], fail_silently=True)
-#             if mail:
-#                 # messages.success(request, 'Письмо отправлено!')
-#                 context = {
-#                     'title': 'Обратная связь',
-#                     'style': style,
-#                     'author': author,
-#                     'emailform': emailform
-#                 }
-#                 return render(request, 'email_ok.html', context=context)
-#             else:
-#                 return render(request, 'email_error.html')
-#                 # messages.error(request, 'Ошибка отправки')
-#         # else:
-#         #     messages.error(request, 'Ошибка валидации')
-#     else:
-#         emailform = EmailForm()
-#     context = {
-#         'title': 'Обратная связь',
-#         'style': style,
-#         'author': author,
-#         'emailform': emailform
-#     }
-#     return render(request, 'email.html', context=context)
 
 
 
