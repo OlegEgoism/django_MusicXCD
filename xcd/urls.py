@@ -23,6 +23,9 @@ urlpatterns = [
 
     path('search/', search_all, name='search'),
 
+    # path('views/', views, name=views),
+
+
     # path('', home, name='home'),
     # path('author/<slug:slug>/', get_author, name='author'),
     # path('style/<slug:slug>/', get_style, name='style'),

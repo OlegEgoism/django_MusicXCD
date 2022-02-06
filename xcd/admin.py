@@ -21,7 +21,7 @@ class FormatAdmin(admin.ModelAdmin):
 
 
 class SamplesAdmin(admin.ModelAdmin):
-    list_display = ('title', 'published', 'size', 'created', 'get_photo',)
+    list_display = ('title', 'published', 'size', 'created', 'get_photo', 'views')
     search_fields = ('title',)
     list_editable = ('published',)
     list_filter = ('published', 'author',)

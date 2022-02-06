@@ -1,0 +1,23 @@
+<h1>Популярный</h1>
+<div class="grid">
+    {% for samples in sample %}
+    <div class="portfolio-item popular">
+        {% if samples.photo %}
+        <img src="{{ samples.photo.url }}" alt="{{ samples.title }}">
+        {% else %}
+        <img src="https://picsum.photos/id/1060/300/201/?blur=2" alt="{{ samples.title }}">
+                {% endif %}
+        <div class="portfolio-text">
+            <h5><a href="{{ samples.get_absolute_url }}">{{ samples.title }}</a></h5>
+            <p>By {{ samples.author }} <span>|</span>{{ samples.created_at|date:"d.m.Y" }}</p>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+
+
+
+
+

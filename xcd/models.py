@@ -14,7 +14,7 @@ class Samples(models.Model):
     link = models.TextField(verbose_name='Ссылка на скачивание файлов')
     published = models.BooleanField(default=False, verbose_name='Опубликовано')
     created = models.DateField(auto_now=True, verbose_name='Дата публикации')
-    views = models.IntegerField(default=0, verbose_name='Количество просмотров')
+    views = models.IntegerField(default=0, verbose_name='Просмотров')
 
     def __str__(self):
         return self.title
@@ -22,7 +22,7 @@ class Samples(models.Model):
     class Meta:
         verbose_name = 'Семплы'
         verbose_name_plural = 'Семплы'
-        ordering = ['-id']
+        ordering = ['published']
 
 
 class Author(models.Model):
