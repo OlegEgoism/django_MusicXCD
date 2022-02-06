@@ -22,23 +22,10 @@ urlpatterns = [
     path('email/', get_email, name='email'),
 
     path('search/', search_all, name='search'),
-    # url(r'^$', views.ESearchView.as_view(), name='index'),
-
-    # path('search/', SearchResultsView.as_view(), name='search'),
-    #
-
-
-
-
-    # path('test/', test, name='test'),
 
     # path('', home, name='home'),
     # path('author/<slug:slug>/', get_author, name='author'),
     # path('style/<slug:slug>/', get_style, name='style'),
     # path('info/<int:pk>', get_info, name='descriptions'),
-
-    # path('login/', LoginUser.as_view(), name='login'),
-    # path('logout/', logout_user, name='logout'),
-    # path('register/', RegisterUser.as_view(), name='register'),
 
 ]

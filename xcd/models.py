@@ -11,8 +11,10 @@ class Samples(models.Model):
     descriptions = models.TextField(blank=True, verbose_name='Описание')
     photo = models.ImageField(blank=True, upload_to='photos/%Y/%m/%d/', verbose_name='Изображение')
     size = models.DecimalField(max_digits=6, decimal_places=2, verbose_name='Размер в MB')
-    link = models.TextField(verbose_name='Ссылка на сачивание файлов')
+    link = models.TextField(verbose_name='Ссылка на скачивание файлов')
     published = models.BooleanField(default=False, verbose_name='Опубликовано')
+    created = models.DateField(auto_now=True, verbose_name='Дата публикации')
+    views = models.IntegerField(default=0, verbose_name='Количество просмотров')
 
     def __str__(self):
         return self.title
@@ -70,5 +72,3 @@ class Format(models.Model):
         verbose_name = 'Формат'
         verbose_name_plural = 'Форматы'
         ordering = ['name']
-
-

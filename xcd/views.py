@@ -216,20 +216,16 @@ def get_email(request):
 
 def search_all(request):
     search_query = request.GET.get('search_Q', '')
-    print(search_query)
     if search_query:
         sample_search = Samples.objects.filter(Q(title__icontains=search_query) | Q(descriptions__icontains=search_query))
-        print(sample_search)
-        # author = Author.objects.filter(name__icontains=search_query)
-        # style = Style.objects.filter(name__icontains=search_query)
-        # print(sample, author, style)
-        sample = Samples.objects.all()
+        # sample_search = Samples.objects.select_related(Q(title__icontains=search_query) | Q(descriptions__icontains=search_query))
+
         style = Style.objects.all()
         author = Author.objects.all()
+        paginate_by = 2
         context = {
             'title': 'Поиск',
             'sample_search': sample_search,
-            'sample': sample,
             'author': author,
             'style': style,
         }
@@ -244,7 +240,7 @@ def search_all(request):
             'author': author,
             'style': style,
         }
-        return render(request, template_name='search_no.html', context=context)
+        return render(request, template_name='search.html', context=context)
 
 
 

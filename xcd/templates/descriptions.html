@@ -35,7 +35,9 @@
         <div class="card-header">
             <a href="{{ item.link }}" class="btn btn-primary">Скачать</a>
             <a class="btn"> Размер: {{ item.size }} Mb</a>
-            <a> Формат: {% for i in item.format.all %} <a><font color="blue">{{ i }}</font></a>{% endfor %} </a>
+            <a class="btn"> Формат: {% for i in item.format.all %} {{ i }} {% endfor %}</a>
+            <a class="btn"> Опубликован: {{ item.created }}</a>
+            <a class="btn"> Просомтры: {{ item.views }}</a>
         </div>
     </div>
 {% endfor %}

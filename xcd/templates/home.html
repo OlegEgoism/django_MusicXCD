@@ -11,7 +11,6 @@
 
 
 {% block content %}
-{{ mixin_prop }}
 {% for item in object_list %}
     <div class="card mb-3">
         <div class="card-header">
@@ -31,12 +30,13 @@
 
                 <h5><font color="red"> Название: </font> <a> {{ item.title | title }} </a></h5>
                 <h6 class="card-text" >{{ item.descriptions | safe| linebreaks | truncatechars:200 }} <a href="{% url 'descriptions' item.pk %}">Еще</a></h6>
-
         </div>
         <div class="card-header">
             <a href="{{ item.link }}" class="btn btn-primary">Скачать</a>
             <a class="btn"> Размер: {{ item.size }} Mb</a>
-            <a> Формат: {% for i in item.format.all %} <a><font color="blue">{{ i }}</font></a>{% endfor %} </a>
+            <a class="btn"> Формат: {% for i in item.format.all %} {{ i }} {% endfor %}</a>
+            <a class="btn"> Опубликован: {{ item.created }}</a>
+            <a class="btn"> Просомтры: {{ item.views }}</a>
         </div>
     </div>
 {% endfor %}

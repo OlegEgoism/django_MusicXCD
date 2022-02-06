@@ -12,5 +12,35 @@
 
 {% block content %}
 <h1>Список поиска</h1>
+{% if sample_search %}
+{% for item in sample_search %}
+<div class="card mb-3">
+        <div class="card-header">
+            <h5><font color="red"> Стиль: </font> {% for i in item.style.all %} <a href="{% url 'style' i.slug %}">{{ i }}</a>{% endfor %}</h5>
+            <h5><font color="red"> Автор: </font> {% for i in item.author.all %} <a href="{% url 'author' i.slug %}">{{ i | upper }}</a>{% endfor %}</h5>
+        </div>
+        <div class="card-body" align="justify">
+            <div>
+                {% if item.photo %}
+                <img src="{{ item.photo.url }}"
+                     alt="" width="280" height="200" align="left" vspace="2" hspace="2" class="float-left mr-3">
+                {% else %}
+                <img src="https://upload.wikimedia.org/wikipedia/ru/thumb/a/ac/No_image_available.svg/1200px-No_image_available.svg.png"
+                     alt="" width="280" height="200" align="left" vspace="2" hspace="2" class="float-left mr-3">
+                {% endif %}
+            </div>
+                <h5><font color="red"> Название: </font> <a> {{ item.title | title }} </a></h5>
+                <h6 class="card-text" >{{ item.descriptions | safe| linebreaks | truncatechars:200 }} <a href="{% url 'descriptions' item.pk %}">Еще</a></h6>
+        </div>
+        <div class="card-header">
+            <a href="{{ item.link }}" class="btn btn-primary">Скачать</a>
+            <a class="btn"> Размер: {{ item.size }} Mb</a>
+            <a> Формат: {% for i in item.format.all %} <a><font color="blue">{{ i }}</font></a>{% endfor %} </a>
+        </div>
+    </div>
+{% endfor %}
+{% else %}
+<img src="https://downloadwap.com/thumbs2/wallpapers/p2ls/new/39/ebwk2w61.jpg" alt="" width="600" height="300" align="left" vspace="2" hspace="2" class="float-left mr-3">
+{% endif %}
 {% endblock %}
 
