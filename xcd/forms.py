@@ -1,13 +1,15 @@
+from captcha.fields import CaptchaField
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django import forms
 from .models import *
-from captcha.fields import CaptchaField
 
 
 class AddAuthorForm(forms.ModelForm):
-    name = forms.CharField(max_length=50, label='Добавить автора', widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Добавьте автора если такого нет в списке'}))
+    name = forms.CharField(max_length=50, label='Добавить автора', widget=forms.TextInput(
+        attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8',
+               'placeholder': 'Добавьте автора если такого нет в списке'}))
 
     class Meta:
         model = Author
@@ -20,14 +22,28 @@ def validator_size(value):
 
 
 class SamplesForm(forms.ModelForm):
-    author = forms.ModelMultipleChoiceField(queryset=Author.objects.all(), label='Автор (выберетеи одного или нескольких авторов из списка)', widget=forms.CheckboxSelectMultiple)
-    style = forms.ModelMultipleChoiceField(queryset=Style.objects.all(), label='Стиль (выберите один или несколько стилей из списка)', widget=forms.CheckboxSelectMultiple)
-    format = forms.ModelMultipleChoiceField(queryset=Format.objects.all(), label='Формат (выберите один или несколько форматов из списка)', widget=forms.CheckboxSelectMultiple)
-    title = forms.CharField(max_length=100, label='Название библиотекеи семплов', widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Укажите польное имя вашей библиотеки семплов'}))
-    descriptions = forms.CharField(label='Описание библиотекеи семплов', required=False, widget=forms.Textarea(attrs={'style': 'margin:10px; padding:10px; height:140px', 'class': 'form-control col-sm-8', 'placeholder': 'Укажите полное описание вашей библиотеки сэмплов без ссылок на стороннии источники'}))
+    author = forms.ModelMultipleChoiceField(queryset=Author.objects.all(),
+                                            label='Автор (выберетеи одного или нескольких авторов из списка)',
+                                            widget=forms.CheckboxSelectMultiple)
+    style = forms.ModelMultipleChoiceField(queryset=Style.objects.all(),
+                                           label='Стиль (выберите один или несколько стилей из списка)',
+                                           widget=forms.CheckboxSelectMultiple)
+    format = forms.ModelMultipleChoiceField(queryset=Format.objects.all(),
+                                            label='Формат (выберите один или несколько форматов из списка)',
+                                            widget=forms.CheckboxSelectMultiple)
+    title = forms.CharField(max_length=100, label='Название библиотекеи семплов', widget=forms.TextInput(
+        attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8',
+               'placeholder': 'Укажите польное имя вашей библиотеки семплов'}))
+    descriptions = forms.CharField(label='Описание библиотекеи семплов', required=False, widget=forms.Textarea(
+        attrs={'style': 'margin:10px; padding:10px; height:140px', 'class': 'form-control col-sm-8',
+               'placeholder': 'Укажите полное описание вашей библиотеки сэмплов без ссылок на стороннии источники'}))
     photo = forms.ImageField(label='Обложка', required=False)
-    size = forms.DecimalField(label='Размер файла', validators=[validator_size], widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Укажите размер файла в мегабайтах (Mbyte, MB)'}))
-    link = forms.CharField(label='Ссылка для скачивания', widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Укажите полную ссылку для скачивания файла'}))
+    size = forms.DecimalField(label='Размер файла', validators=[validator_size], widget=forms.TextInput(
+        attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8',
+               'placeholder': 'Укажите размер файла в мегабайтах (Mbyte, MB)'}))
+    link = forms.CharField(label='Ссылка для скачивания', widget=forms.TextInput(
+        attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8',
+               'placeholder': 'Укажите полную ссылку для скачивания файла'}))
 
     class Meta:
         model = Samples
@@ -38,12 +54,23 @@ def password(value):
     if len(value) < 5:
         raise ValidationError('Пароль должен содержать не меньше 5 символов')
 
-class UserRegistrationForm(forms.ModelForm): #UserCreationForm #forms.Form
-    username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Напишите свой логин'}))
-    password1 = forms.CharField(label='Пароль', validators=[password], widget=forms.PasswordInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Введите пароль не мение 5 символов'}))
-    password2 = forms.CharField(label='Пароль (подтверждение)', validators=[password], widget=forms.PasswordInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Введите пароль не мение 5 символов'}))
-    email = forms.EmailField(label='Почта', widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Электронная почта (e-mail)'}))
-    phone = forms.CharField(label='Телефон', widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Номер телефона с кодом страны'}))
+
+class UserRegistrationForm(forms.ModelForm):  # UserCreationForm #forms.Form
+    username = forms.CharField(label='Логин', widget=forms.TextInput(
+        attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8',
+               'placeholder': 'Напишите свой логин'}))
+    password1 = forms.CharField(label='Пароль', validators=[password], widget=forms.PasswordInput(
+        attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8',
+               'placeholder': 'Введите пароль не мение 5 символов'}))
+    password2 = forms.CharField(label='Пароль (подтверждение)', validators=[password], widget=forms.PasswordInput(
+        attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8',
+               'placeholder': 'Введите пароль не мение 5 символов'}))
+    email = forms.EmailField(label='Почта', widget=forms.TextInput(
+        attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8',
+               'placeholder': 'Электронная почта (e-mail)'}))
+    phone = forms.CharField(label='Телефон', widget=forms.TextInput(
+        attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8',
+               'placeholder': 'Номер телефона с кодом страны'}))
     capthca = CaptchaField(label='')
 
     class Meta:
@@ -66,30 +93,23 @@ class UserRegistrationForm(forms.ModelForm): #UserCreationForm #forms.Form
         raise forms.ValidationError('Этот почтовый адрес уже зарегистрирован')
 
 
-class UserLoginForm(AuthenticationForm): #AuthenticationForm #forms.Form
-    username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Напишите свой логин'}))
-    password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Введите пароль не мение 5 символов'}))
+class UserLoginForm(AuthenticationForm):  # AuthenticationForm #forms.Form
+    username = forms.CharField(label='Логин', widget=forms.TextInput(
+        attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8',
+               'placeholder': 'Напишите свой логин'}))
+    password = forms.CharField(label='Пароль', widget=forms.PasswordInput(
+        attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8',
+               'placeholder': 'Введите пароль не мение 5 символов'}))
 
 
 class EmailForm(forms.Form):
-    subject = forms.EmailField(label='Email', required=True, widget=forms.TextInput(attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'Напишите вашу почту'}))
-    content = forms.CharField(label='Текст письма', widget=forms.Textarea(attrs={'style': 'margin:10px; padding:10px; height:200px', 'class': 'form-control col-sm-8', 'placeholder': 'Напишите текст письма'}))
+    subject = forms.EmailField(label='Email', required=True, widget=forms.TextInput(
+        attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8',
+               'placeholder': 'Напишите вашу почту'}))
+    content = forms.CharField(label='Текст письма', widget=forms.Textarea(
+        attrs={'style': 'margin:10px; padding:10px; height:200px', 'class': 'form-control col-sm-8',
+               'placeholder': 'Напишите текст письма'}))
     capthca = CaptchaField(label='')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     # phone = forms.CharField(label='Мобильный телефон', help_text='(телефон с кодом страны)', widget=forms.TextInput)
     # password = forms.CharField(label='Пароль', widget=forms.PasswordInput)
@@ -97,9 +117,9 @@ class EmailForm(forms.Form):
 
     # class Meta:
     #     model = User
-        # fields = ('username', 'first_name', 'last_name')
-        # widgets = {
-        #     'email': forms.TextInput(attrs={'style': 'margin:10px; padding:10px;height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'E-mail please'}),
+    # fields = ('username', 'first_name', 'last_name')
+    # widgets = {
+    #     'email': forms.TextInput(attrs={'style': 'margin:10px; padding:10px;height:40px', 'class': 'form-control col-sm-8', 'placeholder': 'E-mail please'}),
 
     # def clean_password2(self):
     #     cd = self.cleaned_data
@@ -107,8 +127,6 @@ class EmailForm(forms.Form):
     #         raise forms.ValidationError('Пароль не совпадает')
     #     return cd['password2']
     #
-
-
 
     #
     # class Meta:
@@ -127,9 +145,6 @@ class EmailForm(forms.Form):
     #             'placeholder': 'Firstname please'
     #         }),
     #     }
-
-
-
 
 # class UserCreationForm(forms.ModelForm):
 #     password1 = forms.CharField(
@@ -166,7 +181,6 @@ class EmailForm(forms.Form):
 #
 
 
-
 #     class Meta:
 #         model = User()
 #         fields = ('email', 'lastname', 'firstname')
@@ -189,29 +203,22 @@ class EmailForm(forms.Form):
 #         }
 
 
+# def clean(self):
+#     cleaned_data = super().clean(self)
+#     if User.objects.filter(email=cleaned_data.get('email')).exists():
+#         self.fields.add_error('email', "Эта почта уже зарегестрированна")
+#     return cleaned_data
 
 
-
-
-
-    # def clean(self):
-    #     cleaned_data = super().clean(self)
-    #     if User.objects.filter(email=cleaned_data.get('email')).exists():
-    #         self.fields.add_error('email', "Эта почта уже зарегестрированна")
-    #     return cleaned_data
-
-
-
-
-    # class Meta:
-    #     model = User
-    #     fields = ('username', 'first_name', 'last_name', 'email')
-    #
-    # def clean_password2(self):
-    #     cd = self.cleaned_data
-    #     if cd['password'] != cd['password2']:
-    #         raise forms.ValidationError('Пароль не совпадает')
-    #     return cd['password2']
+# class Meta:
+#     model = User
+#     fields = ('username', 'first_name', 'last_name', 'email')
+#
+# def clean_password2(self):
+#     cd = self.cleaned_data
+#     if cd['password'] != cd['password2']:
+#         raise forms.ValidationError('Пароль не совпадает')
+#     return cd['password2']
 
 #
 

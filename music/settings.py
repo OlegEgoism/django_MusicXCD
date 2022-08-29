@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'xcd',
     'debug_toolbar',
     'captcha',
+
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -135,6 +137,12 @@ MEDIA_URL = '/media/'
 CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
 CAPTCHA_NOISE_FUNCTIONS = None
 CAPTCHA_LETTER_ROTATION = None
+# RECAPTCHA_USE_SSL = False
+# RECAPTCHA_PUBLIC_KEY = 'public'
+# RECAPTCHA_PRIVATE_KEY = 'private'
+# RECAPTCHA_OPTIONS = {'theme': 'white'}
+SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
+
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
@@ -142,3 +150,11 @@ EMAIL_HOST_USER = 'vp3231963@gmail.com'
 EMAIL_HOST_PASSWORD = 'dinamo258'
 EMAIL_PORT = 587
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
