@@ -1,7 +1,6 @@
-from django.contrib import messages
-from django.core.mail import send_mail, BadHeaderError
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect, get_object_or_404
+from django.core.mail import send_mail
+from django.forms import formset_factory
+from django.shortcuts import render, redirect
 from django.views.generic import *
 from .models import *
 from .forms import SamplesForm, AddAuthorForm, UserRegistrationForm, UserLoginForm, EmailForm
@@ -12,7 +11,7 @@ from django.contrib.auth import login, logout
 class HomeSamples(ListView):
     models = Samples
     template_name = 'home.html'
-    context_object_name = 'samples'
+    allow_empty = False
     paginate_by = 2
 
     def get_queryset(self):
@@ -20,49 +19,34 @@ class HomeSamples(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Семплы'
         context['style'] = Style.objects.all()
         context['author'] = Author.objects.all()
         return context
 
 
-class HomeAuthor(ListView):
+class HomeAuthor(HomeSamples):
     model = Author
     template_name = 'home.html'
-    context_object_name = 'author'
-    allow_empty = False
+    # context_object_name = 'author'
+    allow_empty = True
     paginate_by = 2
 
     def get_queryset(self):
         return Samples.objects.filter(author__slug=self.kwargs['slug'], published=True)
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Семплы'
-        context['style'] = Style.objects.all()
-        context['author'] = Author.objects.all()
-        return context
 
-
-class HomeStyle(ListView):
+class HomeStyle(HomeSamples):
     model = Style
     template_name = 'home.html'
-    context_object_name = 'style'
+    # context_object_name = 'style'
     allow_empty = False
     paginate_by = 2
 
     def get_queryset(self):
         return Samples.objects.filter(style__slug=self.kwargs['slug'], published=True)
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Семплы'
-        context['style'] = Style.objects.all()
-        context['author'] = Author.objects.all()
-        return context
 
-
-class Descriptions(ListView):
+class Descriptions(HomeSamples):
     model = Samples
     template_name = 'descriptions.html'
     context_object_name = 'descriptions'
@@ -71,49 +55,54 @@ class Descriptions(ListView):
     def get_queryset(self):
         return Samples.objects.filter(id=self.kwargs['pk'], published=True)
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Информация'
-        context['style'] = Style.objects.all()
-        context['author'] = Author.objects.all()
-        return context
-
 
 def add_author(request):
     style = Style.objects.all()
     author = Author.objects.all()
-    if request.method == 'POST':
-        form_a = AddAuthorForm(request.POST)
-        if form_a.is_valid():
-            form_a.save()
+    form_a = AddAuthorForm(request.POST or None)
+    if request.method == 'POST' and form_a.is_valid():
+        form_a.save()
     context = {
-        'title': 'Добавить автора',
+        'form_a': form_a,
         'style': style,
         'author': author
     }
-    return render(request, template_name='add_author.html', context=context)
+    return render(request, 'add_author.html', context)
 
+
+# formset уточнить и написать
+# def add_samples(request):
+    # style = Style.objects.all()
+    # author = Author.objects.all()
+    # form_a = AddAuthorForm()
+    # form = SamplesForm(request.POST, request.FILES)
+    # if request.method == 'POST':
+    #     if form.is_valid():
+    #         form.save()
+    #         return redirect('published')  # Куда перейдем после добавления
+    # else:
+    #     form = SamplesForm()  # Если проверка выше не прошла
+    # context = {
+    #     'style': style,
+    #     'author': author,
+    #     'form': form,
+    #     'form_a': form_a
+    # }
+    # return render(request, 'add_samples.html', context)
 
 def add_samples(request):
     style = Style.objects.all()
     author = Author.objects.all()
-    form_a = AddAuthorForm()
-    if request.method == 'POST':
-        form = SamplesForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('published')  # Куда перейдем после добавления
-    else:
-        form = SamplesForm()  # Если проверка выше не прошла
+    form = formset_factory(AddAuthorForm, SamplesForm)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        return redirect('published')  # Куда перейдем после добавления
     context = {
-        'title': 'Добавить семплы',
         'style': style,
         'author': author,
         'form': form,
-        'form_a': form_a
     }
-    return render(request, template_name='add_samples.html', context=context)
-
+    return render(request, 'add_samples.html', context)
 
 def add_published_samples(request):
     style = Style.objects.all()
@@ -171,7 +160,7 @@ def get_login(request):
         'style': style,
         'author': author,
         'user_form': user_form
-        }
+    }
     return render(request, 'login.html', context=context)
 
 
@@ -186,7 +175,8 @@ def get_email(request):
     if request.method == 'POST':
         emailform = EmailForm(request.POST)
         if emailform.is_valid():
-            mail = send_mail(emailform.cleaned_data['subject'], emailform.cleaned_data['content'], '',  recipient_list=('olegpustovalov220@gmail.com',), fail_silently=True)
+            mail = send_mail(emailform.cleaned_data['subject'], emailform.cleaned_data['content'], '',
+                             recipient_list=('olegpustovalov220@gmail.com',), fail_silently=True)
             if mail:
                 context = {
                     'title': 'Обратная связь',
@@ -215,9 +205,11 @@ def get_email(request):
 
 
 def search_all(request):
-    search_query = request.GET.get('search_Q', '')
+    search_query = request.GET.get('search_Q')
+    print(search_query)
     if search_query:
-        sample_search = Samples.objects.filter(Q(title__icontains=search_query) | Q(descriptions__icontains=search_query))
+        sample_search = Samples.objects.filter(
+            Q(title__icontains=search_query) | Q(descriptions__icontains=search_query))
         style = Style.objects.all()
         author = Author.objects.all()
         context = {
@@ -226,7 +218,6 @@ def search_all(request):
             'author': author,
             'style': style,
         }
-        return render(request, template_name='search.html', context=context)
     else:
         sample = Samples.objects.all()
         style = Style.objects.all()
@@ -237,8 +228,7 @@ def search_all(request):
             'author': author,
             'style': style,
         }
-        return render(request, template_name='search.html', context=context)
-
+    return render(request, template_name='search.html', context=context)
 
 # def views(request):
 #     sample = Samples.objects.all()
@@ -247,9 +237,6 @@ def search_all(request):
 #         # 'author': author,
 #     }
 #     return render(request, template_name='views.html', context=context)
-
-
-
 
 
 # def search_all(request):
@@ -288,25 +275,6 @@ def search_all(request):
 #     return render(request, template_name='search.html', context={'authors': authors})
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # def password_reset_form(request):
 #     if request.method == 'GET':
 #         form = PasswordResetForm()
@@ -330,25 +298,6 @@ def search_all(request):
 #             return render(request, 'portal/password_reset_done.html', {'form': form,})
 #
 #     return render(request, 'portal/password_reset_form.html', {'form': form,})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 # def get_email(request):
@@ -382,9 +331,6 @@ def search_all(request):
 #         # return HttpResponse('Make sure all fields are entered and valid.')
 
 
-
-
-
 # def contact_view(request):
 #     # если метод GET, вернем форму
 #     if request.method == 'GET':
@@ -409,28 +355,6 @@ def search_all(request):
 #
 # def success_view(request):
 #     return HttpResponse('Приняли! Спасибо за вашу заявку.')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 # AWe#
@@ -465,9 +389,6 @@ def search_all(request):
 #     else:
 #         # Return an 'invalid login' error message.
 #         ...
-
-
-
 
 
 # if request.GET.get("q") != None:
