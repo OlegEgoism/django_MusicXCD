@@ -24,13 +24,13 @@ def validator_size(value):
 class SamplesForm(forms.ModelForm):
     author = forms.ModelMultipleChoiceField(queryset=Author.objects.all(),
                                             label='Автор (выберетеи одного или нескольких авторов из списка)',
-                                            widget=forms.CheckboxSelectMultiple)
+                                            widget=forms.Select)
     style = forms.ModelMultipleChoiceField(queryset=Style.objects.all(),
                                            label='Стиль (выберите один или несколько стилей из списка)',
-                                           widget=forms.CheckboxSelectMultiple)
+                                           widget=forms.Select)
     format = forms.ModelMultipleChoiceField(queryset=Format.objects.all(),
                                             label='Формат (выберите один или несколько форматов из списка)',
-                                            widget=forms.CheckboxSelectMultiple)
+                                            widget=forms.Select)
     title = forms.CharField(max_length=100, label='Название библиотекеи семплов', widget=forms.TextInput(
         attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8',
                'placeholder': 'Укажите польное имя вашей библиотеки семплов'}))
@@ -47,22 +47,22 @@ class SamplesForm(forms.ModelForm):
 
     class Meta:
         model = Samples
-        fields = ['author', 'style', 'format', 'title', 'descriptions', 'photo', 'size', 'link']
+        fields = '__all__'  # ['author', 'style', 'format', 'title', 'descriptions', 'photo', 'size', 'link']
 
 
-def password(value):
-    if len(value) < 5:
-        raise ValidationError('Пароль должен содержать не меньше 5 символов')
+# def password(value):
+#     if len(value) < 5:
+#         raise ValidationError('Пароль должен содержать не меньше 5 символов')
 
 
 class UserRegistrationForm(forms.ModelForm):  # UserCreationForm #forms.Form
     username = forms.CharField(label='Логин', widget=forms.TextInput(
         attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8',
                'placeholder': 'Напишите свой логин'}))
-    password1 = forms.CharField(label='Пароль', validators=[password], widget=forms.PasswordInput(
+    password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput(
         attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8',
                'placeholder': 'Введите пароль не мение 5 символов'}))
-    password2 = forms.CharField(label='Пароль (подтверждение)', validators=[password], widget=forms.PasswordInput(
+    password2 = forms.CharField(label='Пароль (подтверждение)', widget=forms.PasswordInput(
         attrs={'style': 'margin:10px; padding:10px; height:40px', 'class': 'form-control col-sm-8',
                'placeholder': 'Введите пароль не мение 5 символов'}))
     email = forms.EmailField(label='Почта', widget=forms.TextInput(
@@ -77,20 +77,39 @@ class UserRegistrationForm(forms.ModelForm):  # UserCreationForm #forms.Form
         model = User
         fields = ('username', 'password1', 'password2', 'email', 'phone')
 
-    def clean_password2(self):
-        password1 = self.cleaned_data.get('password1')
-        password2 = self.cleaned_data.get('password2')
-        if password1 and password2 and password1 != password2:
-            raise forms.ValidationError('Пароль не совпадает')
-        return password2
+    # def clean_password1(self):
+    #     password1 = self.cleaned_data.get('password1')
+    #     if len(password1) < 5:
+    #         raise ValidationError('Пароль должен содержать не меньше 5 символов')
+    #
+    # def clean_password2(self):
+    #     password1 = self.cleaned_data.get('password1')
+    #     password2 = self.cleaned_data.get('password2')
+    #     if password1 and password2 and password1 != password2:
+    #         raise forms.ValidationError('Пароль не совпадает')
+    #     return password2
 
-    def clean_email(self):
+    def clean(self):
+        clean_data = super().clean()
+        password1 = clean_data.get('password1')
+        password2 = clean_data.get('password2')
         email = self.cleaned_data.get('email')
-        try:
-            match = User.objects.get(email=email)
-        except User.DoesNotExist:
-            return email
-        raise forms.ValidationError('Этот почтовый адрес уже зарегистрирован')
+        match = User.objects.get(email=email)
+        if len(password1) < 5:
+            self.add_error('password1', 'Пароль должен содержать не меньше 5 символов')
+        if password1 and password2 and password1 != password2:
+            self.add_error('password2', 'Пароль не совпадает')
+        if match:
+            self.add_error('email', 'Этот почтовый адрес уже зарегистрирован')
+        return clean_data
+
+    # def clean_email(self):
+    #     email = self.cleaned_data.get('email')
+    #     try:
+    #         match = User.objects.get(email=email)
+    #     except User.DoesNotExist:
+    #         return email
+    #     raise forms.ValidationError('Этот почтовый адрес уже зарегистрирован')
 
 
 class UserLoginForm(AuthenticationForm):  # AuthenticationForm #forms.Form
